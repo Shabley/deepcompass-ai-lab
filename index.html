@@ -9,6 +9,8 @@
 <meta name="author" content="Deep Compass AI Lab">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://shabley.github.io/deepcompass-ai-lab/">
+<link rel="icon" type="image/png" href="images/logo-pin.png">
+<link rel="apple-touch-icon" href="images/logo-pin.png">
 <!-- 검색엔진 소유 확인용 (서치콘솔/서치어드바이저 등록 시 발급 코드로 교체) -->
 <!-- <meta name="google-site-verification" content="여기에_구글_코드"> -->
 <!-- <meta name="naver-site-verification" content="여기에_네이버_코드"> -->
@@ -19,6 +21,8 @@
 <meta property="og:url" content="https://shabley.github.io/deepcompass-ai-lab/">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:site_name" content="Deep Compass AI Lab">
+<meta property="og:image" content="https://shabley.github.io/deepcompass-ai-lab/images/logo.png">
+<meta name="twitter:image" content="https://shabley.github.io/deepcompass-ai-lab/images/logo.png">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Deep Compass AI Lab · 딥컴퍼스AI연구소">
@@ -95,7 +99,8 @@
   }
   nav{display:flex;align-items:center;justify-content:space-between;height:72px}
   .brand{display:flex;align-items:center;gap:12px;color:#fff}
-  .brand .mark{width:34px;height:34px;flex:none}
+  .brand .mark-chip{width:42px;height:42px;flex:none;background:#FAF6EC;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:5px;border:1px solid rgba(201,168,76,.5)}
+  .brand .mark-chip img{width:100%;height:100%;object-fit:contain;display:block}
   .brand-txt{display:flex;flex-direction:column;line-height:1.1}
   .brand-txt b{font-family:'Cormorant Garamond',serif;font-size:19px;letter-spacing:.04em;color:#fff}
   .brand-txt span{font-size:10px;letter-spacing:.28em;color:var(--dc-gold);font-weight:600}
@@ -147,7 +152,8 @@
   .compass-visual{position:relative;aspect-ratio:1;background:linear-gradient(160deg,#0D1B2E,#1E3A5F);border-radius:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 24px 60px rgba(30,58,95,.28);overflow:hidden}
   .compass-visual::before{content:'';position:absolute;width:150%;height:150%;background:conic-gradient(from 0deg,transparent,rgba(0,200,232,.14),transparent 30%);animation:spin 14s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .compass-visual .pin{position:relative;z-index:2;width:56%}
+  .compass-visual .logo-card{position:relative;z-index:2;width:64%;background:#FAF6EC;border-radius:20px;padding:7%;box-shadow:0 16px 44px rgba(0,0,0,.35)}
+  .compass-visual .logo-card img{width:100%;display:block}
 
   /* ---------- VALUES ---------- */
   #values{background:#fff}
@@ -280,11 +286,7 @@
   <div class="wrap">
     <nav>
       <a href="#top" class="brand" aria-label="딥컴퍼스AI연구소 홈">
-        <svg class="mark" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-          <path d="M50 6C31 6 16 21 16 40c0 24 34 54 34 54s34-30 34-54C84 21 69 6 50 6Z" fill="#C9A84C"/>
-          <circle cx="50" cy="40" r="22" fill="#0D1B2E"/>
-          <path d="M50 20l5 15 15 5-15 5-5 15-5-15-15-5 15-5z" fill="#fff"/>
-        </svg>
+        <span class="mark-chip"><img src="images/logo-pin.png" alt="딥컴퍼스AI연구소 로고"></span>
         <span class="brand-txt"><b>DEEP COMPASS</b><span>AI&nbsp;&nbsp;LAB</span></span>
       </a>
       <div class="nav-links" id="navLinks">
@@ -332,11 +334,7 @@
       <p class="en">Deep Compass AI Lab is a hub for learning AI with ease, depth, and collaboration. Through training and research, we nurture future AI instructors and help everyone integrate AI into real life. Like a compass, we guide your journey into the world of AI.</p>
     </div>
     <div class="compass-visual reveal">
-      <svg class="pin" viewBox="0 0 100 100" fill="none" aria-label="딥컴퍼스 로고">
-        <path d="M50 6C31 6 16 21 16 40c0 24 34 54 34 54s34-30 34-54C84 21 69 6 50 6Z" fill="#C9A84C"/>
-        <circle cx="50" cy="40" r="23" fill="#FAF6EC"/>
-        <path d="M50 18l5.5 16.5L72 40l-16.5 5.5L50 62l-5.5-16.5L28 40l16.5-5.5z" fill="#1E3A5F"/>
-      </svg>
+      <div class="logo-card"><img src="images/logo.png" alt="딥컴퍼스AI연구소 로고"></div>
     </div>
   </div>
 </section>
@@ -511,11 +509,7 @@
     <div class="foot-top">
       <div class="foot-brand">
         <a href="#top" class="brand">
-          <svg class="mark" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-            <path d="M50 6C31 6 16 21 16 40c0 24 34 54 34 54s34-30 34-54C84 21 69 6 50 6Z" fill="#C9A84C"/>
-            <circle cx="50" cy="40" r="22" fill="#0D1B2E"/>
-            <path d="M50 20l5 15 15 5-15 5-5 15-5-15-15-5 15-5z" fill="#fff"/>
-          </svg>
+          <span class="mark-chip"><img src="images/logo-pin.png" alt="딥컴퍼스AI연구소 로고"></span>
           <span class="brand-txt"><b>DEEP COMPASS</b><span>AI&nbsp;&nbsp;LAB</span></span>
         </a>
         <p>인공지능을 쉽게, 깊이 있게, 그리고 함께 배우는 공간. 나침반처럼 AI 학습의 길을 안내하는 든든한 동반자가 되겠습니다.</p>
