@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Compass AI Lab · 딥컴퍼스AI연구소 | AI 교육·강사 양성·연구</title>
+<meta name="description" content="인공지능을 쉽게, 깊이 있게, 그리고 함께 배우는 공간. 딥컴퍼스AI연구소는 강의와 연구를 통해 AI 강사를 양성하고 누구나 AI를 실생활에 적용할 수 있도록 돕습니다.">
+<meta name="keywords" content="딥컴퍼스AI연구소, Deep Compass AI Lab, AI 교육, AI 강사 양성, 인공지능 강의, 생성형 AI 교육, AI 연구소, ChatGPT 교육, AI 컨설팅">
+<meta name="author" content="Deep Compass AI Lab">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://shabley.github.io/deepcompass-ai-lab/">
+<!-- 검색엔진 소유 확인용 (서치콘솔/서치어드바이저 등록 시 발급 코드로 교체) -->
+<!-- <meta name="google-site-verification" content="여기에_구글_코드"> -->
+<!-- <meta name="naver-site-verification" content="여기에_네이버_코드"> -->
+<!-- Open Graph (카카오톡·페이스북 공유 미리보기) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Deep Compass AI Lab · 딥컴퍼스AI연구소">
+<meta property="og:description" content="인공지능을 쉽게, 깊이 있게, 그리고 함께 배우는 공간. AI 강사 양성과 실용 AI 교육의 나침반.">
+<meta property="og:url" content="https://shabley.github.io/deepcompass-ai-lab/">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="Deep Compass AI Lab">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deep Compass AI Lab · 딥컴퍼스AI연구소">
+<meta name="twitter:description" content="인공지능을 쉽게, 깊이 있게, 그리고 함께 배우는 공간.">
+<!-- 구조화 데이터 (구글 리치 결과용) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "딥컴퍼스AI연구소",
+  "alternateName": "Deep Compass AI Lab",
+  "url": "https://shabley.github.io/deepcompass-ai-lab/",
+  "slogan": "인공지능을 쉽게, 깊이 있게, 그리고 함께 배우는 공간",
+  "description": "강의와 연구를 통해 AI 강사를 양성하고, 누구나 AI를 실생활에 적용할 수 있도록 돕는 AI 교육 연구소",
+  "email": "contact@deepcompass.ai",
+  "founder": {"@type": "Person", "name": "고연심", "jobTitle": "소장"},
+  "employee": [
+    {"@type": "Person", "name": "조영석", "jobTitle": "수석연구원"},
+    {"@type": "Person", "name": "이종욱", "jobTitle": "책임연구원"},
+    {"@type": "Person", "name": "한유리", "jobTitle": "책임연구원"},
+    {"@type": "Person", "name": "이봉구", "jobTitle": "책임연구원"}
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;600;700;900&family=Cormorant+Garamond:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dc-navy:#1E3A5F;
+    --dc-dark-navy:#0D1B2E;
+    --dc-gold:#C9A84C;
+    --dc-cyan:#00C8E8;
+    --dc-blue:#1B8BC9;
+    --dc-white:#FFFFFF;
+    --dc-cream:#FAF6EC;
+    --dc-light-bg:#EEF2FF;
+    --dc-body:#334155;
+    --dc-caption:#64748B;
+    --dc-border:#D9DEE8;
+    --card-1:#3B82F6;--card-2:#8B5CF6;--card-3:#10B981;--card-4:#F97316;
+    --card-5:#EF4444;--card-6:#0EA5E9;--card-7:#14B8A6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Noto Sans KR',sans-serif;
+    color:var(--dc-body);
+    background:var(--dc-white);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.serif{font-family:'Noto Serif KR',serif}
+  a{text-decoration:none;color:inherit}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+  .eyebrow{
+    display:inline-block;font-size:13px;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--dc-gold);margin-bottom:14px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .section{padding:96px 0}
+  .section-title{font-size:clamp(28px,4vw,42px);font-weight:900;color:var(--dc-navy);line-height:1.25}
+  .section-sub{color:var(--dc-caption);font-size:16px;margin-top:14px;max-width:640px}
+  .center{text-align:center}
+  .center .section-sub{margin-left:auto;margin-right:auto}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(13,27,46,.92);backdrop-filter:blur(12px);
+    border-bottom:2px solid var(--dc-gold);
+    transition:background .3s;
+  }
+  nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:12px;color:#fff}
+  .brand .mark{width:34px;height:34px;flex:none}
+  .brand-txt{display:flex;flex-direction:column;line-height:1.1}
+  .brand-txt b{font-family:'Cormorant Garamond',serif;font-size:19px;letter-spacing:.04em;color:#fff}
+  .brand-txt span{font-size:10px;letter-spacing:.28em;color:var(--dc-gold);font-weight:600}
+  .nav-links{display:flex;gap:34px;align-items:center}
+  .nav-links a{color:#dbe4f0;font-size:15px;font-weight:500;transition:color .2s;position:relative}
+  .nav-links a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--dc-gold);transition:width .25s}
+  .nav-links a:hover{color:#fff}
+  .nav-links a:hover::after{width:100%}
+  .nav-cta{background:var(--dc-gold);color:#fff!important;padding:9px 20px;border-radius:8px;font-weight:700;font-size:14px}
+  .nav-cta:hover{filter:brightness(1.1)}
+  .nav-cta::after{display:none}
+  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:0;padding:6px}
+  .burger span{width:24px;height:2px;background:#fff;transition:.3s}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;min-height:100vh;display:flex;align-items:center;
+    background:radial-gradient(circle at 78% 22%,rgba(0,200,232,.16),transparent 42%),
+               radial-gradient(circle at 12% 88%,rgba(201,168,76,.14),transparent 40%),
+               linear-gradient(135deg,#0D1B2E 0%,#1E3A5F 58%,#1B8BC9 130%);
+    color:#fff;overflow:hidden;padding-top:72px;
+  }
+  .hero .deco{position:absolute;border-radius:50%;pointer-events:none}
+  .hero .deco.a{width:520px;height:520px;top:-160px;right:-120px;background:rgba(26,42,94,.55);filter:blur(4px)}
+  .hero .deco.b{width:360px;height:360px;bottom:-140px;left:-80px;background:rgba(37,47,110,.5)}
+  .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:52px 52px;mask-image:radial-gradient(circle at 50% 40%,#000,transparent 78%)}
+  .hero-inner{position:relative;z-index:2;max-width:820px}
+  .hero .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,200,232,.12);border:1px solid rgba(0,200,232,.4);color:var(--dc-cyan);font-size:13px;font-weight:600;padding:7px 16px;border-radius:100px;margin-bottom:26px;font-family:'JetBrains Mono',monospace}
+  .hero h1{font-size:clamp(34px,5.4vw,60px);font-weight:900;line-height:1.28;letter-spacing:-.01em}
+  .hero h1 .g{color:var(--dc-gold)}
+  .hero h1 .c{color:var(--dc-cyan)}
+  .hero .en{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.4vw,26px);color:#c7d3e4;margin-top:20px;font-weight:500;font-style:italic;letter-spacing:.01em}
+  .hero p.lead{margin-top:24px;font-size:17px;color:#c9d5e6;max-width:600px}
+  .hero-cta{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:14px 30px;border-radius:10px;font-weight:700;font-size:15px;transition:.2s;cursor:pointer;border:0}
+  .btn-primary{background:var(--dc-gold);color:#fff}
+  .btn-primary:hover{filter:brightness(1.1);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.5);color:#fff}
+  .btn-ghost:hover{background:rgba(255,255,255,.1);border-color:#fff}
+  .hero-stats{display:flex;gap:44px;margin-top:56px;flex-wrap:wrap}
+  .hero-stats .st b{display:block;font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--dc-cyan);font-weight:700;line-height:1}
+  .hero-stats .st span{font-size:13px;color:#a9b8cc;letter-spacing:.03em}
+
+  /* ---------- ABOUT ---------- */
+  #about{background:var(--dc-cream)}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+  .about-txt p{margin-top:18px;font-size:16px;color:var(--dc-body)}
+  .about-txt .en{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dc-caption);font-size:17px;margin-top:22px;line-height:1.6}
+  .compass-visual{position:relative;aspect-ratio:1;background:linear-gradient(160deg,#0D1B2E,#1E3A5F);border-radius:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 24px 60px rgba(30,58,95,.28);overflow:hidden}
+  .compass-visual::before{content:'';position:absolute;width:150%;height:150%;background:conic-gradient(from 0deg,transparent,rgba(0,200,232,.14),transparent 30%);animation:spin 14s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .compass-visual .pin{position:relative;z-index:2;width:56%}
+
+  /* ---------- VALUES ---------- */
+  #values{background:#fff}
+  .val-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px;margin-top:52px}
+  .val-card{background:#fff;border:1px solid var(--dc-border);border-radius:16px;padding:28px 24px;border-top:4px solid var(--card-1);box-shadow:0 4px 20px rgba(30,58,95,.06);transition:transform .22s,box-shadow .22s}
+  .val-card:hover{transform:translateY(-6px);box-shadow:0 16px 44px rgba(30,58,95,.16)}
+  .val-card .letter{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:700;line-height:1;color:var(--card-1)}
+  .val-card h3{font-size:19px;color:var(--dc-navy);margin:10px 0 6px;font-weight:700}
+  .val-card .kr{font-size:14px;color:var(--dc-body);font-weight:500}
+  .val-card .en{font-size:12.5px;color:var(--dc-caption);margin-top:8px;font-family:'Cormorant Garamond',serif;font-style:italic}
+  .val-card:nth-child(1){border-top-color:var(--card-1)} .val-card:nth-child(1) .letter{color:var(--card-1)}
+  .val-card:nth-child(2){border-top-color:var(--card-2)} .val-card:nth-child(2) .letter{color:var(--card-2)}
+  .val-card:nth-child(3){border-top-color:var(--card-3)} .val-card:nth-child(3) .letter{color:var(--card-3)}
+  .val-card:nth-child(4){border-top-color:var(--card-4)} .val-card:nth-child(4) .letter{color:var(--card-4)}
+  .val-card:nth-child(5){border-top-color:var(--card-5)} .val-card:nth-child(5) .letter{color:var(--card-5)}
+  .val-card:nth-child(6){border-top-color:var(--card-6)} .val-card:nth-child(6) .letter{color:var(--card-6)}
+  .val-card:nth-child(7){border-top-color:var(--card-7)} .val-card:nth-child(7) .letter{color:var(--card-7)}
+
+  /* ---------- SERVICES ---------- */
+  #services{background:var(--dc-dark-navy);color:#fff;position:relative;overflow:hidden}
+  #services .deco{position:absolute;width:440px;height:440px;border-radius:50%;background:rgba(27,139,201,.18);filter:blur(30px);top:-120px;left:-100px;pointer-events:none}
+  #services .section-title{color:#fff}
+  #services .eyebrow{color:var(--dc-cyan)}
+  .svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:52px;position:relative;z-index:2}
+  .svc-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:34px 30px;transition:.25s}
+  .svc-card:hover{background:rgba(0,200,232,.06);border-color:rgba(0,200,232,.4);transform:translateY(-5px)}
+  .svc-card .ic{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--dc-cyan),var(--dc-blue));margin-bottom:20px}
+  .svc-card .ic svg{width:28px;height:28px;stroke:#fff}
+  .svc-card h3{font-size:21px;color:#fff;margin-bottom:12px;font-weight:700}
+  .svc-card p{color:#a9b8cc;font-size:14.5px}
+  .svc-card ul{list-style:none;margin-top:16px}
+  .svc-card li{color:#c7d3e4;font-size:14px;padding-left:20px;position:relative;margin-top:7px}
+  .svc-card li::before{content:'';position:absolute;left:0;top:9px;width:7px;height:7px;border-radius:50%;background:var(--dc-cyan)}
+
+  /* ---------- TEAM ---------- */
+  #team{background:var(--dc-cream)}
+  /* photo avatar (shared) */
+  .avatar img{width:100%;height:100%;object-fit:cover;object-position:center top;position:absolute;inset:0}
+  .avatar .initial{font-family:'Noto Serif KR',serif;font-weight:900;color:rgba(255,255,255,.95)}
+
+  /* --- Director (featured) --- */
+  .director{display:grid;grid-template-columns:360px 1fr;gap:0;margin-top:56px;background:#fff;border:1px solid var(--dc-border);border-radius:26px;overflow:hidden;box-shadow:0 22px 60px rgba(30,58,95,.16);border-top:5px solid var(--dc-gold)}
+  .director .photo{position:relative;min-height:440px;background:linear-gradient(150deg,#1E3A5F,#1B8BC9);display:flex;align-items:center;justify-content:center}
+  .director .photo .initial{font-size:96px}
+  .director .d-info{padding:52px 52px 48px;display:flex;flex-direction:column}
+  .director .badge-dir{align-self:flex-start;background:var(--dc-gold);color:#fff;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:100px;font-family:'JetBrains Mono',monospace}
+  .director h3{font-size:clamp(30px,4vw,40px);color:var(--dc-navy);margin:18px 0 4px;font-weight:900}
+  .director .role-kr{font-size:17px;color:var(--dc-blue);font-weight:700}
+  .director .role-en{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dc-caption);font-size:16px;margin-top:2px}
+  .director .bio-space{margin-top:26px;flex:1;border:1.5px dashed var(--dc-border);border-radius:14px;padding:22px 24px;background:var(--dc-light-bg);min-height:120px}
+  .director .bio-space .ph{font-size:13px;color:var(--dc-caption);font-family:'JetBrains Mono',monospace;letter-spacing:.03em}
+  .director .bio-space .ph b{display:block;color:var(--dc-navy);font-family:'Noto Sans KR';font-size:14px;margin-bottom:6px;letter-spacing:0}
+
+  /* --- Instructors / Researchers grid --- */
+  .team-sub{display:flex;align-items:center;gap:16px;margin:80px 0 8px}
+  .team-sub h3{font-size:clamp(22px,3vw,30px);color:var(--dc-navy);font-weight:900;white-space:nowrap}
+  .team-sub .line{flex:1;height:1px;background:var(--dc-border)}
+  .team-sub .en{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dc-gold);font-size:17px}
+  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px;margin-top:32px}
+  .member{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 6px 26px rgba(30,58,95,.08);transition:transform .25s,box-shadow .25s;border:1px solid var(--dc-border)}
+  .member:hover{transform:translateY(-6px);box-shadow:0 18px 48px rgba(30,58,95,.16)}
+  .member .avatar{height:260px;display:flex;align-items:center;justify-content:center;position:relative}
+  .member .avatar .initial{font-size:64px}
+  .member:nth-child(1) .avatar{background:linear-gradient(150deg,#1E3A5F,#1B8BC9)}
+  .member:nth-child(2) .avatar{background:linear-gradient(150deg,#334155,#3B82F6)}
+  .member:nth-child(3) .avatar{background:linear-gradient(150deg,#5B4B8A,#8B5CF6)}
+  .member:nth-child(4) .avatar{background:linear-gradient(150deg,#0F766E,#10B981)}
+  .member .info{padding:22px 24px 26px}
+  .member .role{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--dc-gold);text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+  .member h3{font-size:22px;color:var(--dc-navy);margin:8px 0 4px;font-weight:700}
+  .member .role-kr{font-size:14px;color:var(--dc-caption);font-weight:500}
+  .member .bio-space{margin-top:16px;border:1.5px dashed var(--dc-border);border-radius:12px;padding:14px 16px;background:var(--dc-light-bg);min-height:78px}
+  .member .bio-space .ph{font-size:12px;color:var(--dc-caption);font-family:'JetBrains Mono',monospace}
+  .member .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+  .member .tags span{font-size:11px;background:var(--dc-light-bg);color:var(--dc-navy);padding:4px 10px;border-radius:100px;font-weight:600}
+  @media(max-width:720px){.director{grid-template-columns:1fr}.director .photo{min-height:340px}}
+
+  /* ---------- CONTACT ---------- */
+  #contact{background:linear-gradient(135deg,#0D1B2E,#1E3A5F);color:#fff;position:relative;overflow:hidden}
+  #contact .eyebrow{color:var(--dc-cyan)}
+  #contact .section-title{color:#fff}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:52px;align-items:start}
+  .contact-info .item{display:flex;gap:16px;align-items:flex-start;margin-bottom:28px}
+  .contact-info .ic{width:46px;height:46px;flex:none;border-radius:12px;background:rgba(0,200,232,.14);display:flex;align-items:center;justify-content:center}
+  .contact-info .ic svg{width:22px;height:22px;stroke:var(--dc-cyan)}
+  .contact-info .item b{display:block;color:#fff;font-size:15px;margin-bottom:2px}
+  .contact-info .item span{color:#a9b8cc;font-size:14px}
+  form{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:32px}
+  form label{display:block;font-size:13px;color:#c7d3e4;margin-bottom:7px;font-weight:500}
+  form input,form textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:12px 14px;color:#fff;font-family:inherit;font-size:14px;margin-bottom:18px;transition:.2s}
+  form input:focus,form textarea:focus{outline:none;border-color:var(--dc-cyan);background:rgba(0,200,232,.06)}
+  form input::placeholder,form textarea::placeholder{color:#7d8ba3}
+  form button{width:100%;background:var(--dc-gold);color:#fff;font-weight:700;font-size:15px;padding:14px;border:0;border-radius:10px;cursor:pointer;transition:.2s}
+  form button:hover{filter:brightness(1.1)}
+  .form-msg{font-size:14px;color:var(--dc-cyan);margin-top:14px;text-align:center;min-height:20px}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--dc-dark-navy);color:#8fa0b8;padding:56px 0 30px;border-top:2px solid var(--dc-gold)}
+  .foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:34px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .foot-brand{max-width:340px}
+  .foot-brand .brand{margin-bottom:14px}
+  .foot-brand p{font-size:13.5px;color:#8fa0b8;line-height:1.7}
+  .foot-cols{display:flex;gap:56px;flex-wrap:wrap}
+  .foot-col h4{color:#fff;font-size:14px;margin-bottom:14px;font-weight:700}
+  .foot-col a{display:block;font-size:13.5px;color:#8fa0b8;margin-bottom:9px;transition:color .2s}
+  .foot-col a:hover{color:var(--dc-cyan)}
+  .foot-bottom{padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12.5px;color:#5f7089}
+  .foot-bottom .slogan{color:var(--dc-gold);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:860px){
+    .nav-links{position:fixed;top:72px;left:0;right:0;flex-direction:column;background:rgba(13,27,46,.98);padding:24px;gap:18px;transform:translateY(-140%);transition:transform .3s;border-bottom:2px solid var(--dc-gold)}
+    .nav-links.open{transform:translateY(0)}
+    .burger{display:flex}
+    .about-grid,.contact-grid{grid-template-columns:1fr;gap:40px}
+    .compass-visual{max-width:360px;margin:0 auto}
+    .section{padding:72px 0}
+    .hero-stats{gap:30px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header id="top">
+  <div class="wrap">
+    <nav>
+      <a href="#top" class="brand" aria-label="딥컴퍼스AI연구소 홈">
+        <svg class="mark" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+          <path d="M50 6C31 6 16 21 16 40c0 24 34 54 34 54s34-30 34-54C84 21 69 6 50 6Z" fill="#C9A84C"/>
+          <circle cx="50" cy="40" r="22" fill="#0D1B2E"/>
+          <path d="M50 20l5 15 15 5-15 5-5 15-5-15-15-5 15-5z" fill="#fff"/>
+        </svg>
+        <span class="brand-txt"><b>DEEP COMPASS</b><span>AI&nbsp;&nbsp;LAB</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">소개</a>
+        <a href="#values">핵심가치</a>
+        <a href="#services">활동영역</a>
+        <a href="#team">연구진</a>
+        <a href="#contact" class="nav-cta">문의하기</a>
+      </div>
+      <button class="burger" id="burger" aria-label="메뉴 열기"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="deco a"></div><div class="deco b"></div><div class="hero-grid"></div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <span class="badge">✦ Deep Compass AI Lab · 딥컴퍼스AI연구소</span>
+      <h1>인공지능을 <span class="g">쉽게</span>, <span class="c">깊이 있게</span>,<br>그리고 <span class="g">함께</span> 배우는 공간</h1>
+      <p class="en">A hub for learning AI with ease, depth, and collaboration</p>
+      <p class="lead">강의와 연구를 통해 AI 강사를 양성하고, 누구나 AI를 실생활에 적용할 수 있도록 돕습니다. ‘나침반(Compass)’처럼, AI 학습의 길을 안내하는 든든한 동반자가 되겠습니다.</p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-primary">교육·협업 문의</a>
+        <a href="#services" class="btn btn-ghost">활동영역 보기</a>
+      </div>
+      <div class="hero-stats">
+        <div class="st"><b>7</b><span>Core Values · 핵심가치</span></div>
+        <div class="st"><b>4</b><span>전문 연구진</span></div>
+        <div class="st"><b>∞</b><span>함께 성장하는 학습 생태계</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about" class="section">
+  <div class="wrap about-grid">
+    <div class="about-txt reveal">
+      <span class="eyebrow">About Us</span>
+      <h2 class="section-title">AI 학습의 나침반이<br>되겠습니다</h2>
+      <p>Deep Compass AI Lab은 인공지능을 쉽고, 깊이 있게, 함께 배우는 공간입니다. 강의와 연구를 통해 AI 강사를 양성하고, 누구나 AI를 실생활에 적용할 수 있도록 돕습니다.</p>
+      <p>‘나침반(Compass)’처럼, AI 학습의 길을 안내하는 든든한 동반자가 되겠습니다. 방향을 잃기 쉬운 인공지능의 바다에서, 우리는 명확하고 실용적인 배움의 좌표를 제시합니다.</p>
+      <p class="en">Deep Compass AI Lab is a hub for learning AI with ease, depth, and collaboration. Through training and research, we nurture future AI instructors and help everyone integrate AI into real life. Like a compass, we guide your journey into the world of AI.</p>
+    </div>
+    <div class="compass-visual reveal">
+      <svg class="pin" viewBox="0 0 100 100" fill="none" aria-label="딥컴퍼스 로고">
+        <path d="M50 6C31 6 16 21 16 40c0 24 34 54 34 54s34-30 34-54C84 21 69 6 50 6Z" fill="#C9A84C"/>
+        <circle cx="50" cy="40" r="23" fill="#FAF6EC"/>
+        <path d="M50 18l5.5 16.5L72 40l-16.5 5.5L50 62l-5.5-16.5L28 40l16.5-5.5z" fill="#1E3A5F"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CORE VALUES ===== -->
+<section id="values" class="section">
+  <div class="wrap center">
+    <span class="eyebrow reveal">Core Values</span>
+    <h2 class="section-title reveal">Deep C.O.M.P.A.S.S.</h2>
+    <p class="section-sub reveal">딥컴퍼스AI연구소를 움직이는 7가지 핵심 가치. 각 알파벳이 우리가 배움을 대하는 태도를 담고 있습니다.</p>
+    <div class="val-grid">
+      <div class="val-card reveal"><div class="letter">C</div><h3>Clarity</h3><div class="kr">누구나 이해할 수 있는 쉬운 AI</div><div class="en">AI made simple for everyone to understand</div></div>
+      <div class="val-card reveal"><div class="letter">O</div><h3>Openness</h3><div class="kr">열린 마음으로 배우고 나누는 공동체</div><div class="en">A community learning and sharing with an open mind</div></div>
+      <div class="val-card reveal"><div class="letter">M</div><h3>Mastery</h3><div class="kr">강사 양성과 전문성 강화</div><div class="en">Instructor training and expertise development</div></div>
+      <div class="val-card reveal"><div class="letter">P</div><h3>Practice</h3><div class="kr">실용 중심의 프로젝트 학습</div><div class="en">Practical project-based learning</div></div>
+      <div class="val-card reveal"><div class="letter">A</div><h3>Accessibility</h3><div class="kr">모두에게 열려 있는 AI 교육</div><div class="en">AI education open to everyone</div></div>
+      <div class="val-card reveal"><div class="letter">S</div><h3>Support</h3><div class="kr">함께 성장하는 튼튼한 서포트</div><div class="en">Strong support for growing together</div></div>
+      <div class="val-card reveal"><div class="letter">S</div><h3>Sustainability</h3><div class="kr">지속 가능한 학습과 연구 생태계</div><div class="en">Sustainable learning and research ecosystem</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section id="services" class="section">
+  <div class="deco"></div>
+  <div class="wrap center">
+    <span class="eyebrow reveal">What We Do</span>
+    <h2 class="section-title reveal">함께하는 방법</h2>
+    <p class="section-sub reveal">강의·연구·강사 양성을 축으로, AI를 배우고 적용하고 확산하는 모든 여정을 함께합니다.</p>
+  </div>
+  <div class="wrap">
+    <div class="svc-grid">
+      <div class="svc-card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <h3>강의 · 교육 프로그램</h3>
+        <p>입문부터 실무 활용까지, 수준별 커리큘럼으로 설계된 AI 교육을 제공합니다.</p>
+        <ul><li>생성형 AI 실무 활용 과정</li><li>기업·기관 맞춤형 교육</li><li>프로젝트 기반 실습 워크숍</li></ul>
+      </div>
+      <div class="svc-card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M8.5 6h7l2 6a5.5 5.5 0 1 1-11 0z"/><path d="M6.5 12h11"/></svg></div>
+        <h3>AI 강사 양성</h3>
+        <p>가르치는 전문가를 기릅니다. 콘텐츠 설계부터 강의 실전까지 전문성을 강화합니다.</p>
+        <ul><li>AI 강사 인증 과정</li><li>강의 콘텐츠·교안 설계</li><li>지속 성장 멘토링 지원</li></ul>
+      </div>
+      <div class="svc-card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+        <h3>연구 · 협업 프로젝트</h3>
+        <p>현장의 문제를 AI로 풀어냅니다. 기관·기업과 함께 실증 연구를 수행합니다.</p>
+        <ul><li>AI 활용 실증 연구</li><li>콘텐츠·자동화 솔루션 개발</li><li>산학·기관 협력 프로젝트</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TEAM ===== -->
+<section id="team" class="section">
+  <div class="wrap center">
+    <span class="eyebrow reveal">People</span>
+    <h2 class="section-title reveal">연구소 사람들</h2>
+    <p class="section-sub reveal">AI 학습의 나침반을 함께 만들어가는 딥컴퍼스AI연구소 구성원을 소개합니다.</p>
+  </div>
+
+  <!-- Director (featured) -->
+  <div class="wrap">
+    <div class="director reveal">
+      <div class="photo">
+        <img src="images/고연심.jpg" alt="고연심 소장" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="initial" style="display:none">高</span>
+      </div>
+      <div class="d-info">
+        <span class="badge-dir">소장 · Director</span>
+        <h3>고연심</h3>
+        <div class="role-kr">딥컴퍼스AI연구소 소장</div>
+        <div class="role-en">Director, Deep Compass AI Lab</div>
+        <div class="bio-space">
+          <div class="ph"><b>약력 · Profile</b>이곳에 소장님의 약력과 소개가 들어갑니다. (내용 준비 중 — 자료를 주시면 채워 넣겠습니다.)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instructors / Researchers -->
+    <div class="team-sub reveal">
+      <h3>강사 · 연구진</h3>
+      <span class="line"></span>
+      <span class="en">Instructors &amp; Researchers</span>
+    </div>
+    <div class="team-grid">
+      <div class="member reveal">
+        <div class="avatar">
+          <img src="images/조영석.jpg" alt="조영석 수석연구원" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span class="initial" style="display:none">조</span>
+        </div>
+        <div class="info">
+          <div class="role">Chief Researcher</div>
+          <h3>조영석</h3>
+          <div class="role-kr">수석연구원</div>
+          <div class="bio-space"><div class="ph">약력 준비 중 — 자료 입력 예정</div></div>
+        </div>
+      </div>
+      <div class="member reveal">
+        <div class="avatar">
+          <img src="images/이종욱.jpg" alt="이종욱 책임연구원" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span class="initial" style="display:none">이</span>
+        </div>
+        <div class="info">
+          <div class="role">Principal Researcher</div>
+          <h3>이종욱</h3>
+          <div class="role-kr">책임연구원</div>
+          <div class="bio-space"><div class="ph">약력 준비 중 — 자료 입력 예정</div></div>
+        </div>
+      </div>
+      <div class="member reveal">
+        <div class="avatar">
+          <img src="images/한유리.jpg" alt="한유리 책임연구원" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span class="initial" style="display:none">한</span>
+        </div>
+        <div class="info">
+          <div class="role">Principal Researcher</div>
+          <h3>한유리</h3>
+          <div class="role-kr">책임연구원</div>
+          <div class="bio-space"><div class="ph">약력 준비 중 — 자료 입력 예정</div></div>
+        </div>
+      </div>
+      <div class="member reveal">
+        <div class="avatar">
+          <img src="images/이봉구.jpg" alt="이봉구 책임연구원" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span class="initial" style="display:none">이</span>
+        </div>
+        <div class="info">
+          <div class="role">Principal Researcher</div>
+          <h3>이봉구</h3>
+          <div class="role-kr">책임연구원</div>
+          <div class="bio-space"><div class="ph">약력 준비 중 — 자료 입력 예정</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact" class="section">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow reveal">Get in Touch</span>
+      <h2 class="section-title reveal">함께 시작해요</h2>
+      <p class="section-sub reveal">교육, 강사 양성, 연구·협업 무엇이든 편하게 문의해 주세요. AI 학습의 방향을 함께 찾아드립니다.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="item"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg></div><div><b>이메일</b><span>contact@deepcompass.ai</span></div></div>
+        <div class="item"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.5-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg></div><div><b>교육·협업 문의</b><span>강의 · AI 강사 양성 · 연구 협력</span></div></div>
+        <div class="item"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><b>Deep Compass AI Lab</b><span>딥컴퍼스AI연구소</span></div></div>
+        <div class="item"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><b>운영 시간</b><span>평일 09:00 – 18:00</span></div></div>
+      </div>
+      <form class="reveal" id="contactForm" onsubmit="return submitForm(event)">
+        <label for="f-name">이름</label>
+        <input id="f-name" type="text" placeholder="성함을 입력해 주세요" required>
+        <label for="f-email">이메일</label>
+        <input id="f-email" type="email" placeholder="answer@example.com" required>
+        <label for="f-msg">문의 내용</label>
+        <textarea id="f-msg" rows="4" placeholder="어떤 도움이 필요하신가요?" required></textarea>
+        <button type="submit">문의 보내기</button>
+        <div class="form-msg" id="formMsg"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="#top" class="brand">
+          <svg class="mark" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <path d="M50 6C31 6 16 21 16 40c0 24 34 54 34 54s34-30 34-54C84 21 69 6 50 6Z" fill="#C9A84C"/>
+            <circle cx="50" cy="40" r="22" fill="#0D1B2E"/>
+            <path d="M50 20l5 15 15 5-15 5-5 15-5-15-15-5 15-5z" fill="#fff"/>
+          </svg>
+          <span class="brand-txt"><b>DEEP COMPASS</b><span>AI&nbsp;&nbsp;LAB</span></span>
+        </a>
+        <p>인공지능을 쉽게, 깊이 있게, 그리고 함께 배우는 공간. 나침반처럼 AI 학습의 길을 안내하는 든든한 동반자가 되겠습니다.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h4>바로가기</h4>
+          <a href="#about">연구소 소개</a>
+          <a href="#values">핵심가치</a>
+          <a href="#services">활동영역</a>
+          <a href="#team">연구진</a>
+        </div>
+        <div class="foot-col">
+          <h4>함께하기</h4>
+          <a href="#contact">교육 문의</a>
+          <a href="#contact">강사 양성</a>
+          <a href="#contact">연구 협업</a>
+          <a href="#contact">문의하기</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Deep Compass AI Lab · 딥컴퍼스AI연구소. All rights reserved.</span>
+      <span class="slogan">Your compass in the world of AI learning</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile menu
+  const burger=document.getElementById('burger'),navLinks=document.getElementById('navLinks');
+  burger.addEventListener('click',()=>navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
+
+  // scroll reveal
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.14});
+  document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*0.08)+'s';io.observe(el);});
+
+  // contact form (demo)
+  function submitForm(e){
+    e.preventDefault();
+    const name=document.getElementById('f-name').value.trim();
+    document.getElementById('formMsg').textContent='✓ '+name+'님, 문의가 접수되었습니다. 곧 연락드리겠습니다!';
+    e.target.reset();
+    return false;
+  }
+</script>
+</body>
+</html>
