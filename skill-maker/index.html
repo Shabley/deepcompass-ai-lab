@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SKILL COMPASS — DeepCompass AI Lab | Claude 스킬 자동 생성기</title>
+<meta name="description" content="주제만 입력하면 Claude용 SKILL.md를 60초 만에 자동 생성합니다. 딥컴퍼스AI연구소 SKILL COMPASS.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{
+  --bg:#0D1B2E; --card:#13233D; --card2:#1A2A5E; --line:#24395c;
+  --cyan:#00C8E8; --blue:#1B8BC9; --gold:#C9A84C;
+  --text:#E5EAF3; --sub:#94A3B8;
+  --p1:#3B82F6; --p2:#8B5CF6; --p3:#10B981; --p4:#F97316;
+  --red:#EF4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg); color:var(--text); min-height:100vh; line-height:1.6;
+  background-image:radial-gradient(circle at 15% 10%, rgba(0,200,232,.07) 0%, transparent 40%),
+                   radial-gradient(circle at 85% 80%, rgba(139,92,246,.06) 0%, transparent 45%);
+}
+a{color:var(--cyan)}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{
+  font-family:inherit; width:100%; background:#0f1e35; border:1px solid var(--line);
+  border-radius:10px; color:var(--text); padding:12px 14px; font-size:15px; outline:none;
+  transition:border-color .2s, box-shadow .2s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan); box-shadow:0 0 0 3px rgba(0,200,232,.12)}
+textarea{resize:vertical; min-height:90px}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+::placeholder{color:#5b6b85}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+/* ===== Header ===== */
+header{padding:34px 0 10px;text-align:center;position:relative;overflow:hidden}
+.logo-line{font-size:13px;letter-spacing:4px;color:var(--gold);font-weight:700}
+h1.title{
+  font-size:clamp(34px,6vw,54px);font-weight:800;margin:6px 0 8px;
+  background:linear-gradient(90deg,#7fe6f7,var(--cyan) 45%,var(--blue));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 40px rgba(0,200,232,.25);
+}
+.subcopy{color:var(--sub);font-size:15px}
+.deco{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none;opacity:.5}
+.deco.d1{width:140px;height:140px;border:1px solid rgba(0,200,232,.3);top:-40px;left:6%}
+.deco.d2{width:90px;height:90px;background:radial-gradient(circle,rgba(27,139,201,.18),transparent 70%);bottom:0;right:8%}
+
+/* ===== Tabs ===== */
+.tabbar{
+  display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;
+  margin:26px auto 30px;position:sticky;top:0;z-index:40;
+  background:rgba(13,27,46,.92);backdrop-filter:blur(8px);padding:10px 6px;border-bottom:1px solid var(--line);
+}
+.tab-btn{
+  background:transparent;border:1px solid var(--line);color:var(--sub);
+  padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600;transition:all .2s;white-space:nowrap;
+}
+.tab-btn:hover{border-color:var(--cyan);color:var(--text)}
+.tab-btn.active{background:linear-gradient(90deg,var(--cyan),var(--blue));color:#04212b;border-color:transparent;box-shadow:0 4px 18px rgba(0,200,232,.35)}
+.vault-btn{
+  margin-left:8px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.5);color:var(--gold);
+  padding:9px 16px;border-radius:999px;font-size:14px;font-weight:700;transition:all .2s;white-space:nowrap;
+}
+.vault-btn:hover{background:rgba(201,168,76,.25)}
+
+.tab-panel{display:none;animation:fadein .3s}
+.tab-panel.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ===== Cards ===== */
+.card{
+  background:linear-gradient(160deg,var(--card),#12203a 70%);
+  border:1px solid var(--line);border-radius:16px;padding:26px;margin-bottom:22px;
+  box-shadow:0 8px 30px rgba(0,0,0,.25);
+}
+.card h2{font-size:19px;margin-bottom:6px}
+.card .desc{color:var(--sub);font-size:13.5px;margin-bottom:18px}
+.step-tag{
+  display:inline-block;font-size:11px;font-weight:800;letter-spacing:2px;color:var(--cyan);
+  border:1px solid rgba(0,200,232,.4);border-radius:6px;padding:3px 10px;margin-bottom:10px;background:rgba(0,200,232,.07);
+}
+
+/* API key bar */
+.keycard{border:1.5px solid rgba(201,168,76,.65);background:linear-gradient(160deg,#1a2440,#14203a);box-shadow:0 0 26px rgba(201,168,76,.12)}
+.keycard h2{color:var(--gold)}
+.keyrow{display:flex;gap:10px;flex-wrap:wrap}
+.keyrow .keyinput-wrap{position:relative;flex:1;min-width:230px}
+.keyrow input{padding-right:46px}
+.eye-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;color:var(--sub);padding:6px}
+.save-key-btn{
+  background:linear-gradient(90deg,var(--gold),#a9853a);border:none;border-radius:10px;color:#1a1406;
+  font-weight:800;padding:12px 26px;font-size:15px;transition:filter .2s;
+}
+.save-key-btn:hover{filter:brightness(1.1)}
+.key-note{font-size:12.5px;color:var(--sub);margin-top:10px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.shake{animation:shake .5s}
+
+/* form */
+.field{margin-bottom:18px;position:relative}
+.field label{display:block;font-weight:700;font-size:14.5px;margin-bottom:7px}
+.field label .req{color:var(--red)}
+.field label .opt{color:var(--sub);font-weight:400;font-size:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.field.err input,.field.err textarea{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.15)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{
+  background:#0f1e35;border:1px solid var(--line);color:var(--sub);border-radius:999px;
+  padding:6px 13px;font-size:13px;transition:all .15s;
+}
+.chip:hover{border-color:var(--cyan);color:var(--cyan)}
+.chip.sel{background:rgba(0,200,232,.14);border-color:var(--cyan);color:var(--cyan);font-weight:700}
+.persona-cat{font-size:12.5px;font-weight:800;color:var(--gold);margin:12px 0 2px;letter-spacing:1px}
+#topicChips{display:none}
+#topicChips.show{display:flex}
+
+/* CTA */
+.cta{
+  display:block;width:100%;border:none;border-radius:14px;padding:19px;font-size:18px;font-weight:800;
+  background:linear-gradient(90deg,var(--cyan),var(--blue));color:#03222c;
+  box-shadow:0 8px 30px rgba(0,200,232,.35);transition:transform .15s, box-shadow .2s, filter .2s;
+}
+.cta:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,200,232,.5);filter:brightness(1.06)}
+.cta:disabled{opacity:.55;cursor:not-allowed;transform:none}
+
+/* progress */
+.progress-outer{background:#0f1e35;border-radius:99px;height:12px;overflow:hidden;margin:18px 0 26px;border:1px solid var(--line)}
+.progress-inner{height:100%;width:4%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--blue));transition:width .8s ease;box-shadow:0 0 14px rgba(0,200,232,.6)}
+.steps{list-style:none}
+.steps li{display:flex;align-items:center;gap:12px;padding:11px 4px;color:var(--sub);font-size:15px;border-bottom:1px dashed rgba(36,57,92,.6)}
+.steps li:last-child{border-bottom:none}
+.steps .dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;transition:all .3s}
+.steps li.doing{color:var(--cyan)}
+.steps li.doing .dot{border-color:var(--cyan);box-shadow:0 0 10px rgba(0,200,232,.5);animation:pulse 1.2s infinite}
+.steps li.done{color:var(--text)}
+.steps li.done .dot{border-color:var(--p3);background:rgba(16,185,129,.15);color:var(--p3)}
+@keyframes pulse{0%,100%{box-shadow:0 0 6px rgba(0,200,232,.3)}50%{box-shadow:0 0 16px rgba(0,200,232,.8)}}
+.wait-note{margin-top:18px;text-align:center;color:var(--gold);font-size:13.5px}
+.retry-box{text-align:center;margin-top:16px}
+.retry-btn{background:rgba(239,68,68,.12);border:1px solid var(--red);color:#fca5a5;border-radius:10px;padding:11px 26px;font-weight:700;font-size:15px}
+.retry-btn:hover{background:rgba(239,68,68,.25)}
+
+/* result */
+.statgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:760px){.statgrid{grid-template-columns:repeat(2,1fr)}.statgrid .stat:last-child{grid-column:span 2}}
+.stat{background:#0f1e35;border:1px solid var(--line);border-radius:12px;padding:14px 10px;text-align:center}
+.stat .num{font-size:22px;font-weight:800;color:var(--gold);word-break:break-all;line-height:1.25}
+.stat .lbl{font-size:11px;letter-spacing:1.5px;color:var(--sub);margin-top:3px}
+.stat:nth-child(1){border-top:3px solid var(--p1)}
+.stat:nth-child(2){border-top:3px solid var(--p2)}
+.stat:nth-child(3){border-top:3px solid var(--p3)}
+.stat:nth-child(4){border-top:3px solid var(--p4)}
+.stat:nth-child(5){border-top:3px solid var(--cyan)}
+.viewer{
+  background:#091524;border:1px solid var(--line);border-radius:12px;padding:20px;
+  font-family:'SF Mono',Consolas,'Courier New',monospace;font-size:13px;line-height:1.7;
+  white-space:pre-wrap;word-break:break-word;max-height:520px;overflow:auto;color:#c9d7ee;
+}
+.viewer::-webkit-scrollbar{width:10px}
+.viewer::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px}
+.result-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.act-btn{
+  flex:1;min-width:130px;border-radius:11px;padding:13px 12px;font-weight:700;font-size:14.5px;
+  border:1px solid var(--line);background:#0f1e35;color:var(--text);transition:all .2s;
+}
+.act-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.act-btn.primary{background:linear-gradient(90deg,var(--cyan),var(--blue));color:#03222c;border:none}
+.act-btn.primary:hover{filter:brightness(1.08);color:#03222c}
+.act-btn.goldline{border-color:rgba(201,168,76,.6);color:var(--gold)}
+.act-btn.goldline:hover{background:rgba(201,168,76,.12)}
+
+/* guide cards */
+.guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.guide-grid{grid-template-columns:1fr}}
+.gcard{background:#0f1e35;border:1px solid var(--line);border-radius:14px;padding:20px;position:relative}
+.gcard .gnum{position:absolute;top:16px;right:18px;font-size:30px;font-weight:800;color:rgba(0,200,232,.18)}
+.gcard h3{font-size:16px;margin-bottom:8px;color:var(--cyan)}
+.gcard p{font-size:13.5px;color:var(--sub)}
+.gcard.c1{border-top:3px solid var(--p1)}.gcard.c2{border-top:3px solid var(--p2)}
+.gcard.c3{border-top:3px solid var(--p3)}.gcard.c4{border-top:3px solid var(--p4)}
+.gcard.c5{border-top:3px solid var(--cyan)}.gcard.c6{border-top:3px solid var(--gold)}
+.gcard ul{margin:8px 0 0 18px;font-size:13.5px;color:var(--sub)}
+.gcard li{margin-bottom:4px}
+
+/* accordion */
+.acc{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden;background:#0f1e35}
+.acc summary{cursor:pointer;padding:15px 18px;font-weight:700;font-size:14.5px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"▾";color:var(--cyan);transition:transform .2s}
+.acc[open] summary::after{transform:rotate(180deg)}
+.acc .acc-body{padding:0 18px 16px;color:var(--sub);font-size:13.5px}
+
+/* tables */
+table.cmp{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+table.cmp th,table.cmp td{border:1px solid var(--line);padding:10px 12px;text-align:left}
+table.cmp th{background:#0f1e35;color:var(--cyan);font-weight:700}
+table.cmp td{color:var(--sub)}
+.table-scroll{overflow-x:auto}
+
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.ba-grid{grid-template-columns:1fr}}
+.ba{border-radius:14px;padding:20px;border:1px solid var(--line)}
+.ba.before{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.35)}
+.ba.after{background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.35)}
+.ba h3{font-size:15px;margin-bottom:10px}
+.ba.before h3{color:#fca5a5}.ba.after h3{color:#6ee7b7}
+.ba p{font-size:13.5px;color:var(--sub)}
+.warn-box{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.4);border-radius:12px;padding:16px 18px;font-size:13.5px;color:#fca5a5;margin-top:16px}
+.tip-box{background:rgba(0,200,232,.07);border:1px solid rgba(0,200,232,.35);border-radius:12px;padding:16px 18px;font-size:13.5px;color:var(--sub);margin-top:16px}
+
+/* ===== Vault panel ===== */
+.vault-overlay{position:fixed;inset:0;background:rgba(4,10,20,.6);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .25s;z-index:80}
+.vault-overlay.open{opacity:1;pointer-events:auto}
+.vault{
+  position:fixed;top:0;right:0;height:100%;width:min(430px,94vw);z-index:90;
+  background:linear-gradient(180deg,#13233D,#0f1c33);border-left:1px solid var(--line);
+  transform:translateX(105%);transition:transform .3s ease;display:flex;flex-direction:column;
+  box-shadow:-14px 0 44px rgba(0,0,0,.5);
+}
+.vault.open{transform:none}
+.vault-head{padding:20px 20px 12px;border-bottom:1px solid var(--line)}
+.vault-head h2{font-size:18px;display:flex;justify-content:space-between;align-items:center}
+.vault-close{background:none;border:none;color:var(--sub);font-size:24px;line-height:1}
+.vault-close:hover{color:var(--text)}
+.vault-dash{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 4px}
+.vd{background:#0f1e35;border:1px solid var(--line);border-radius:10px;text-align:center;padding:10px 4px}
+.vd .n{font-size:19px;font-weight:800;color:var(--gold)}
+.vd .l{font-size:10.5px;color:var(--sub)}
+.vault-search{padding:12px 20px 0}
+.vault-list{flex:1;overflow-y:auto;padding:12px 20px 20px}
+.vitem{background:#0f1e35;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+.vitem .vt{font-weight:700;font-size:14.5px;word-break:break-all}
+.vitem .vm{font-size:12px;color:var(--sub);margin:4px 0 10px}
+.vitem .vbtns{display:flex;flex-wrap:wrap;gap:6px}
+.vbtn{font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--sub)}
+.vbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.vbtn.danger:hover{border-color:var(--red);color:var(--red)}
+.vault-foot{padding:14px 20px;border-top:1px solid var(--line)}
+.vault-empty{text-align:center;color:var(--sub);font-size:13.5px;padding:34px 10px}
+
+/* toast */
+#toasts{position:fixed;right:18px;bottom:18px;z-index:120;display:flex;flex-direction:column;gap:10px;max-width:min(360px,90vw)}
+.toast{
+  padding:13px 18px;border-radius:12px;font-size:14px;font-weight:600;color:var(--text);
+  background:#13233D;border:1px solid var(--cyan);border-left:5px solid var(--cyan);
+  box-shadow:0 8px 26px rgba(0,0,0,.45);animation:toastin .3s;
+}
+.toast.error{border-color:var(--red);border-left-color:var(--red)}
+@keyframes toastin{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+
+footer{border-top:1px solid var(--line);margin-top:44px;padding:30px 0 40px;text-align:center;color:var(--sub);font-size:13px}
+footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="deco d1"></div><div class="deco d2"></div>
+  <div class="wrap">
+    <div class="logo-line">DEEPCOMPASS AI LAB</div>
+    <h1 class="title">SKILL COMPASS</h1>
+    <p class="subcopy">주제만 입력하면 Claude용 SKILL.md를 60초 만에 자동 생성합니다</p>
+  </div>
+</header>
+
+<nav class="tabbar wrap">
+  <button class="tab-btn active" data-tab="maker">⚡ SKILL COMPASS</button>
+  <button class="tab-btn" data-tab="howto">📖 사용 가이드</button>
+  <button class="tab-btn" data-tab="what">📘 SKILL이란?</button>
+  <button class="tab-btn" data-tab="apikey">🔑 API KEY 발급 가이드</button>
+  <button class="vault-btn" id="openVault">📚 내 스킬 보관함</button>
+</nav>
+
+<main class="wrap">
+
+<!-- ══════════ TAB 1 : MAKER ══════════ -->
+<section id="tab-maker" class="tab-panel active">
+
+  <!-- form view -->
+  <div id="makerForm">
+
+    <div class="card keycard" id="keyCard">
+      <h2>🔑 Claude API KEY</h2>
+      <p class="desc">스킬 생성을 위해 Anthropic API 키가 필요합니다. 발급 방법은 상단 <b>API KEY 발급 가이드</b> 탭을 참고하세요.</p>
+      <div class="keyrow">
+        <div class="keyinput-wrap">
+          <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off">
+          <button class="eye-btn" id="toggleKey" title="키 표시/숨김">👁</button>
+        </div>
+        <button class="save-key-btn" id="saveKeyBtn">저장</button>
+      </div>
+      <p class="key-note">🔒 API 키는 이 브라우저의 <b>sessionStorage에만 저장</b>되며, 브라우저를 닫으면 자동 삭제됩니다. Anthropic API 호출 외에 외부로 전송되지 않습니다.</p>
+    </div>
+
+    <div class="card">
+      <span class="step-tag">STEP 01</span>
+      <h2>스킬 기본 정보</h2>
+      <p class="desc">어떤 스킬을 만들지 알려주세요. 예시 칩을 클릭하면 자동 입력됩니다.</p>
+
+      <div class="field" id="fTopic">
+        <label>🎯 스킬 주제 / 이름 <span class="req">*</span></label>
+        <input type="text" id="inTopic" placeholder="예: 유튜브 스크립트 자동 작성">
+        <div class="chips" id="topicChips"></div>
+      </div>
+
+      <div class="grid2">
+        <div class="field">
+          <label>📂 카테고리</label>
+          <select id="inCategory">
+            <option>콘텐츠 생성</option><option>교육·강의</option><option>마케팅·홍보</option>
+            <option>문서 작성</option><option>데이터 분석</option><option>코드·개발</option>
+            <option>비즈니스 전략</option><option>기타</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>📤 출력물 형식</label>
+          <select id="inFormat">
+            <option>DOCX 파일</option><option>PPTX 파일</option><option>텍스트(채팅 응답)</option>
+            <option>HTML 파일</option><option>Excel·CSV</option><option>마크다운(.md)</option><option>복합 형식</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>🎭 페르소나 <span class="opt">(선택 — 클릭하여 선택하거나 직접 입력)</span></label>
+        <input type="text" id="inPersona" placeholder="예: 프롬프트 엔지니어 / 직접 입력 가능">
+        <div id="personaChips"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="step-tag">STEP 02</span>
+      <h2>세부 설정</h2>
+      <p class="desc">구체적일수록 정교한 스킬이 생성됩니다.</p>
+
+      <div class="field" id="fTask">
+        <label>📋 핵심 작업 <span class="req">*</span></label>
+        <textarea id="inTask" placeholder="이 스킬이 수행해야 할 작업을 구체적으로 적어주세요. 구체적일수록 정교한 스킬이 생성됩니다.&#10;예: 주제와 타깃 시청자를 입력받아 5~8분 분량의 유튜브 스크립트를 후킹 오프닝→본론 3파트→CTA 구조로 작성"></textarea>
+      </div>
+
+      <div class="grid2">
+        <div class="field">
+          <label>👥 대상 사용자 <span class="opt">(선택)</span></label>
+          <input type="text" id="inAudience" placeholder="예: 1인 크리에이터, 교육 기관 담당자">
+        </div>
+        <div class="field">
+          <label>🏢 브랜드/조직명 <span class="opt">(선택)</span></label>
+          <input type="text" id="inBrand" placeholder="딥컴퍼스AI연구소">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>💡 트리거 힌트 <span class="opt">(선택 — 어떤 요청이 올 때 이 스킬이 실행되어야 하나요?)</span></label>
+        <textarea id="inTrigger" placeholder="예: '유튜브 대본 써줘', '영상 스크립트 만들어줘', '쇼츠 대본 뽑아줘' 같은 요청이 오면 실행"></textarea>
+      </div>
+    </div>
+
+    <button class="cta" id="generateBtn">⚡ SKILL.md 파일 자동 생성</button>
+  </div>
+
+  <!-- progress view -->
+  <div id="makerProgress" style="display:none">
+    <div class="card">
+      <h2>🛠 스킬 생성 중...</h2>
+      <div class="progress-outer"><div class="progress-inner" id="progBar"></div></div>
+      <ul class="steps" id="progSteps">
+        <li data-step="0"><span class="dot">1</span>스킬 구조 분석 중</li>
+        <li data-step="1"><span class="dot">2</span>페르소나·워크플로우 설계 중</li>
+        <li data-step="2"><span class="dot">3</span>트리거 조건 최적화 중</li>
+        <li data-step="3"><span class="dot">4</span>품질 체크리스트 생성 중</li>
+        <li data-step="4"><span class="dot">5</span>최종 SKILL.md 완성 중</li>
+      </ul>
+      <p class="wait-note">⏳ 60~120초 소요됩니다. 페이지를 닫지 마세요.</p>
+      <div class="retry-box" id="retryBox" style="display:none">
+        <button class="retry-btn" id="retryBtn">↺ 다시 시도</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- result view -->
+  <div id="makerResult" style="display:none">
+    <div class="card">
+      <h2>✅ SKILL.md 생성 완료</h2>
+      <p class="desc" id="resultMeta"></p>
+      <div class="statgrid">
+        <div class="stat"><div class="num" id="stLines">0</div><div class="lbl">LINES</div></div>
+        <div class="stat"><div class="num" id="stChars">0</div><div class="lbl">CHARS</div></div>
+        <div class="stat"><div class="num" id="stSections">0</div><div class="lbl">SECTIONS</div></div>
+        <div class="stat"><div class="num" id="stTriggers">0</div><div class="lbl">TRIGGERS</div></div>
+        <div class="stat"><div class="num" id="stName">—</div><div class="lbl">SKILL NAME</div></div>
+      </div>
+      <div class="viewer" id="resultViewer"></div>
+      <div class="result-actions">
+        <button class="act-btn" id="copyBtn">📋 복사</button>
+        <button class="act-btn primary" id="dlMdBtn">⬇ .md 다운로드</button>
+        <button class="act-btn primary" id="dlSkillBtn">📦 .skill 패키지</button>
+        <button class="act-btn goldline" id="saveVaultBtn">☁ 보관함 저장</button>
+        <button class="act-btn" id="remakeBtn">↺ 다시 만들기</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TAB 2 : HOW TO ══════════ -->
+<section id="tab-howto" class="tab-panel">
+  <div class="card">
+    <h2>📖 SKILL COMPASS 사용 가이드</h2>
+    <p class="desc">7단계만 따라 하면 나만의 Claude 스킬이 완성됩니다.</p>
+    <div class="guide-grid">
+      <div class="gcard c1"><span class="gnum">01</span><h3>🔑 API 키 입력</h3><p>console.anthropic.com에서 발급받은 API 키를 SKILL COMPASS 탭 상단의 황금색 박스에 입력하고 [저장]을 누릅니다. 키는 브라우저 세션에만 보관됩니다.</p></div>
+      <div class="gcard c2"><span class="gnum">02</span><h3>📝 스킬 정보 입력</h3><p>스킬 주제(필수), 카테고리, 출력 형식, 페르소나를 고르고 핵심 작업(필수)을 구체적으로 적습니다. 트리거 힌트를 적으면 스킬 자동 실행 정확도가 크게 올라갑니다.</p></div>
+      <div class="gcard c3"><span class="gnum">03</span><h3>⚡ 생성</h3><p>[SKILL.md 파일 자동 생성] 버튼을 누르면 Claude가 300줄 이상의 전문가급 스킬 파일을 작성합니다. 60~120초 정도 걸리니 페이지를 닫지 마세요.</p></div>
+      <div class="gcard c4"><span class="gnum">04</span><h3>⬇ 다운로드</h3><p>결과 화면에서 <b>.md 단일 파일</b> 또는 README·참고자료가 포함된 <b>.skill 패키지(ZIP)</b>로 다운로드합니다. 보관함에 저장해두면 언제든 다시 불러올 수 있습니다.</p></div>
+      <div class="gcard c5"><span class="gnum">05</span><h3>🤖 Claude에 등록</h3><p><b>방법 A</b> — Claude 앱 &gt; 설정 &gt; 기능 &gt; 스킬(Skills)에서 .skill 파일 업로드.<br><b>방법 B</b> — SKILL.md 내용을 복사해 Claude Project의 지침(Instructions)에 붙여넣기.</p></div>
+      <div class="gcard c6"><span class="gnum">06</span><h3>🧪 트리거 테스트</h3><p>스킬에 정의된 트리거 문장(예: "보도자료 써줘")을 Claude에 입력해 스킬이 자동 실행되는지 확인합니다. 잘 안 되면 트리거 힌트를 보강해 다시 생성하세요.</p></div>
+    </div>
+    <div class="tip-box">💡 <b>07 — 반복 활용</b>: 보관함에서 언제든 스킬을 불러와 수정·재다운로드할 수 있습니다. 팀원과 .skill 파일을 공유하면 조직 전체가 같은 품질의 결과물을 얻습니다.</div>
+  </div>
+
+  <div class="card">
+    <h2>❓ 자주 묻는 질문 (FAQ)</h2>
+    <details class="acc"><summary>생성 중 타임아웃/혼잡 오류가 떠요</summary><div class="acc-body">Anthropic 서버가 일시적으로 혼잡한 경우입니다. [다시 시도] 버튼을 누르거나 1~2분 후 재시도하세요. 같은 증상이 반복되면 네트워크(회사 방화벽·VPN)가 api.anthropic.com 접속을 막고 있는지 확인해 주세요.</div></details>
+    <details class="acc"><summary>API 키를 잃어버렸어요</summary><div class="acc-body">API 키는 발급 시 한 번만 표시되며 다시 볼 수 없습니다. console.anthropic.com &gt; API Keys에서 기존 키를 삭제하고 새 키를 발급받아 다시 입력하세요. 본 앱은 키를 세션에만 저장하므로 브라우저를 닫으면 재입력이 필요합니다.</div></details>
+    <details class="acc"><summary>생성된 내용이 중간에 잘렸어요</summary><div class="acc-body">SKILL COMPASS는 응답이 길이 제한에 걸리면 자동으로 최대 2회까지 이어쓰기를 요청해 병합합니다. 그래도 잘렸다면 핵심 작업 설명을 조금 줄여서 다시 생성해 보세요.</div></details>
+    <details class="acc"><summary>보관함 데이터는 어디에 저장되나요?</summary><div class="acc-body">브라우저의 localStorage에 저장됩니다. 서버 전송이 전혀 없어 안전하지만, 같은 브라우저·같은 기기에서만 보입니다. 브라우저 데이터를 삭제하면 함께 지워지니 중요한 스킬은 [전체 내보내기]로 백업하세요.</div></details>
+    <details class="acc"><summary>생성 비용은 얼마나 드나요?</summary><div class="acc-body">Claude API 사용량 기준으로 스킬 1개당 <b>약 $0.02~0.05</b> 수준입니다(분량에 따라 변동). Anthropic 콘솔의 Usage 페이지에서 실제 사용량을 확인할 수 있습니다.</div></details>
+  </div>
+</section>
+
+<!-- ══════════ TAB 3 : WHAT IS SKILL ══════════ -->
+<section id="tab-what" class="tab-panel">
+  <div class="card">
+    <h2>📘 SKILL이란?</h2>
+    <p class="desc" style="font-size:15px;color:var(--text)">SKILL은 <b style="color:var(--cyan)">"Claude에게 업무 수행 방법을 가르치는 지침 파일"</b>입니다.<br>한 번 만들어두면, 매번 긴 프롬프트를 쓰지 않아도 Claude가 정해진 절차·형식·품질 기준대로 일합니다.</p>
+    <div class="ba-grid">
+      <div class="ba before">
+        <h3>😩 Before — 스킬이 없을 때</h3>
+        <p>"보도자료 써줘. 제목은 이렇게, 리드문은 이렇게, 인용은 2개, 어조는 공식적으로, 분량은 A4 1장, 마지막에 회사 소개 넣고..." 를 <b>매번 반복 입력</b>. 사람·날짜마다 결과 품질이 들쭉날쭉.</p>
+      </div>
+      <div class="ba after">
+        <h3>😎 After — 스킬이 있을 때</h3>
+        <p><b>"신제품 보도자료 써줘"</b> 한 마디면 끝. 스킬에 내장된 페르소나·워크플로우·품질 체크리스트대로 항상 동일한 전문가급 결과물이 나옵니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📄 .md 단일 파일 vs 📦 .skill 패키지</h2>
+    <div class="table-scroll">
+    <table class="cmp">
+      <tr><th>구분</th><th>SKILL.md (단일 파일)</th><th>.skill 패키지 (ZIP)</th></tr>
+      <tr><td>구성</td><td>지침 파일 1개</td><td>SKILL.md + README + references/ 참고자료</td></tr>
+      <tr><td>등록 방법</td><td>Claude Project 지침에 붙여넣기</td><td>Claude 앱 &gt; 설정 &gt; 기능 &gt; 스킬에 업로드</td></tr>
+      <tr><td>자동 실행</td><td>해당 Project 안에서만 동작</td><td>트리거 문장 감지 시 자동 실행</td></tr>
+      <tr><td>공유</td><td>텍스트 복사로 공유</td><td>파일 하나로 팀 전체 배포</td></tr>
+      <tr><td>추천 용도</td><td>빠른 테스트, 단일 프로젝트</td><td>정식 배포, 반복 업무 자동화</td></tr>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>✨ 스킬의 6가지 장점</h2>
+    <div class="guide-grid">
+      <div class="gcard c1"><h3>🔁 반복 자동화</h3><p>매번 쓰던 긴 프롬프트가 트리거 한 문장으로 줄어듭니다. 반복 업무 시간이 크게 절감됩니다.</p></div>
+      <div class="gcard c2"><h3>🎯 품질 일관성</h3><p>내장된 워크플로우와 체크리스트 덕분에 누가 언제 실행해도 같은 수준의 결과물이 나옵니다.</p></div>
+      <div class="gcard c3"><h3>🎨 브랜드 스타일 내장</h3><p>조직의 어조·표기 규칙·컬러 가이드까지 스킬에 담아 브랜드 일관성을 지킵니다.</p></div>
+      <div class="gcard c4"><h3>🤝 팀 공유</h3><p>.skill 파일 하나로 팀 전체가 동일한 AI 업무 도구를 사용합니다. 온보딩도 빨라집니다.</p></div>
+      <div class="gcard c5"><h3>💎 노하우 자산화</h3><p>개인의 머릿속 노하우가 파일로 축적되어 조직의 지식 자산이 됩니다.</p></div>
+      <div class="gcard c6"><h3>🚀 생산성</h3><p>기획→작성→검수 전 과정을 스킬이 대신 수행해 결과물 생산 속도가 수 배 빨라집니다.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🗂 카테고리별 활용 예시</h2>
+    <div class="guide-grid">
+      <div class="gcard c1"><h3>콘텐츠 생성</h3><ul><li>유튜브 스크립트 자동 작성</li><li>카드뉴스 기획·문안 제작</li><li>뉴스레터 원고 작성</li></ul></div>
+      <div class="gcard c2"><h3>교육·강의</h3><ul><li>강의교안 PPT 자동 생성</li><li>커리큘럼·차시별 계획 설계</li><li>퀴즈·실습 과제 출제</li></ul></div>
+      <div class="gcard c3"><h3>마케팅·홍보</h3><ul><li>보도자료 작성</li><li>블로그 SEO 포스팅</li><li>이메일 마케팅 시퀀스</li></ul></div>
+      <div class="gcard c4"><h3>문서 작성</h3><ul><li>회의록 정리·액션아이템 추출</li><li>민원 답변서 작성</li><li>공문·품의서 초안</li></ul></div>
+      <div class="gcard c5"><h3>데이터 분석</h3><ul><li>설문 결과 요약 리포트</li><li>매출 데이터 인사이트 도출</li><li>뉴스 키워드 다이제스트</li></ul></div>
+      <div class="gcard c6"><h3>비즈니스 전략</h3><ul><li>사업기획서 작성</li><li>제안서·견적서 초안</li><li>경쟁사 분석 보고서</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TAB 4 : API KEY GUIDE ══════════ -->
+<section id="tab-apikey" class="tab-panel">
+  <div class="card">
+    <h2>🔑 Anthropic API KEY 발급 가이드</h2>
+    <p class="desc">console.anthropic.com 기준 5단계입니다. 처음이라면 5분이면 충분합니다.</p>
+    <div class="guide-grid">
+      <div class="gcard c1"><span class="gnum">01</span><h3>회원 가입</h3><p><a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>에 접속해 이메일 또는 Google 계정으로 가입합니다.</p></div>
+      <div class="gcard c2"><span class="gnum">02</span><h3>Billing 카드 등록</h3><p>좌측 메뉴 <b>Billing</b>에서 결제 카드를 등록합니다. 신규 계정에는 소액의 무료 크레딧이 제공되는 경우가 있어 먼저 테스트해볼 수 있습니다.</p></div>
+      <div class="gcard c3"><span class="gnum">03</span><h3>Create Key</h3><p>좌측 메뉴 <b>API Keys</b> &gt; <b>Create Key</b> 버튼을 눌러 키 이름(예: skill-maker)을 정하고 생성합니다.</p></div>
+      <div class="gcard c4"><span class="gnum">04</span><h3>키 복사</h3><p>생성된 키(sk-ant-...)를 즉시 복사해 안전한 곳에 보관하세요. <b>⚠ 키는 이 화면에서 한 번만 표시되며 다시 볼 수 없습니다.</b></p></div>
+      <div class="gcard c5"><span class="gnum">05</span><h3>본 앱에 입력</h3><p>SKILL COMPASS 탭 상단 황금색 박스에 키를 붙여넣고 [저장]을 누르면 준비 완료입니다.</p></div>
+    </div>
+    <div class="warn-box">
+      ⚠ <b>과금 주의사항</b><br>
+      · Billing &gt; <b>Usage Limit(사용 한도)</b>를 반드시 설정해 예상치 못한 과금을 방지하세요. (예: 월 $5)<br>
+      · API 키는 비밀번호와 같습니다. <b>절대 타인과 공유하거나 공개 게시물에 올리지 마세요.</b><br>
+      · 키가 유출된 것 같으면 즉시 콘솔에서 해당 키를 삭제(Revoke)하고 새로 발급하세요.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════ VAULT PANEL ══════════ -->
+<div class="vault-overlay" id="vaultOverlay"></div>
+<aside class="vault" id="vaultPanel" aria-label="내 스킬 보관함">
+  <div class="vault-head">
+    <h2>📚 내 스킬 보관함 <button class="vault-close" id="closeVault" title="닫기">×</button></h2>
+    <div class="vault-dash">
+      <div class="vd"><div class="n" id="vdTotal">0</div><div class="l">총 스킬</div></div>
+      <div class="vd"><div class="n" id="vdCats">0</div><div class="l">카테고리</div></div>
+      <div class="vd"><div class="n" id="vdMonth">0</div><div class="l">이번 달 생성</div></div>
+    </div>
+  </div>
+  <div class="vault-search">
+    <input type="text" id="vaultSearch" placeholder="🔍 스킬명·카테고리 검색">
+  </div>
+  <div class="vault-list" id="vaultList"></div>
+  <div class="vault-foot">
+    <button class="act-btn goldline" id="exportAllBtn" style="width:100%">⬇ 전체 내보내기 (.md 통합본)</button>
+  </div>
+</aside>
+
+<div id="toasts"></div>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">DEEPCOMPASS AI LAB · SKILL COMPASS v1.0</div>
+    딥컴퍼스AI연구소 · 문의: <a href="mailto:emas7788@naver.com">emas7788@naver.com</a> · <a href="https://blog.naver.com/emas7788" target="_blank" rel="noopener">blog.naver.com/emas7788</a><br>
+    © 2026 고연심. Powered by Claude AI (Anthropic).
+  </div>
+</footer>
+
+<script>
+"use strict";
+/* ════════════════════════ constants ════════════════════════ */
+const API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL = "claude-sonnet-4-6";
+const MAX_TOKENS = 8000;
+const KEY_STORE = "dc_skillmaker_key";
+const VAULT_STORE = "dc_skillmaker_vault";
+
+const SYSTEM_PROMPT = `당신은 Claude Agent Skills 설계 전문가입니다. 사용자가 제공한 정보를 바탕으로
+즉시 사용 가능한 전문가급 SKILL.md 파일을 한국어로 작성합니다.
+
+[출력 규칙]
+- SKILL.md 원문만 출력한다. 인사말·설명·코드펜스(\`\`\`) 금지.
+- 최소 300줄, 6,000자 이상의 완성형으로 작성한다.
+- 반드시 아래 구조를 따른다:
+
+1) YAML frontmatter:
+---
+name: (영문-케밥케이스-스킬명)
+description: >
+  (스킬 기능 1~2문장 요약 +
+  '다음 상황에서 반드시 이 스킬을 사용할 것:' 이하에
+  실제 사용자가 입력할 법한 한국어 트리거 문장을 인용부호로 15개 이상 나열.
+  마지막에 '~중 하나라도 언급되며 생성·작성 의도가 보이면 반드시 이 스킬을 사용할 것' 문구)
+---
+
+2) # 스킬명 (한국어)
+3) ## 🎭 페르소나 — 역할·전문성·말투 정의
+4) ## 🎯 목적과 범위 — 수행하는 것 / 수행하지 않는 것
+5) ## 📥 입력 처리 — 사용자에게 받을 정보, 누락 시 기본값·질문 규칙
+6) ## ⚙️ 작업 워크플로우 — 단계별(STEP 1~N) 상세 실행 절차.
+   각 단계에 구체적 행동 지시 포함
+7) ## 📤 출력 형식 — 선택된 출력물 형식에 맞는 상세 스펙.
+   DOCX면 docx npm 라이브러리 사용 지시 + 문서 구조 + 컬러(#1E3A5F/#C9A84C),
+   PPTX면 pptxgenjs 사용 지시 + 슬라이드 구성(표지→목차→본문→정리) + 컬러(#0D1B2E/#00C8E8),
+   HTML이면 단일 파일 + 반응형 + 다크·라이트 지시,
+   텍스트/마크다운이면 섹션 구조 지시
+8) ## 🎨 스타일 가이드 — 문체·어조·브랜드 반영 규칙
+   (브랜드명이 입력되면 해당 브랜드 표기 규칙 포함)
+9) ## ✅ 품질 체크리스트 — 완료 전 자체 점검 항목 10개 이상 (체크박스 형식)
+10) ## 💬 사용 예시 — 사용자 요청 예시 3개와 각각의 처리 방향
+11) ## ⚠️ 주의사항 — 금지 사항, 예외 처리, 에러 시 대응
+
+트리거 문장은 사용자가 입력한 '트리거 힌트'를 반드시 반영하되,
+동의어·변형 표현으로 확장할 것.`;
+
+const TOPIC_EXAMPLES = [
+  "유튜브 스크립트 자동 작성","강의교안 PPT 생성","보도자료 작성","블로그 SEO 포스팅",
+  "회의록 정리","사업기획서 작성","카드뉴스 제작","민원 답변서 작성","이메일 마케팅","뉴스 다이제스트"
+];
+
+const PERSONAS = {
+  "AI·기술":["프롬프트 엔지니어","개발자","데이터 분석가","자동화 전문가","AI 서비스 기획자","머신러닝 엔지니어"],
+  "교육·콘텐츠":["강의 설계 전문가","교육 콘텐츠 전문가","기술 문서 작가","유튜브 콘텐츠 기획자","스토리텔러"],
+  "비즈니스":["전략 기획자","경영 컨설턴트","프로젝트 매니저(PM)","사업개발 담당자","재무 분석가"],
+  "마케팅":["카피라이터","SNS 마케터","SEO 전문가","브랜드 매니저","퍼포먼스 마케터"],
+  "전문직":["행정 전문가","세무 전문가","의료 전문가","법률 문서 전문가","HR 전문가"]
+};
+
+/* ════════════════════════ helpers ════════════════════════ */
+const $ = id => document.getElementById(id);
+let isGenerating = false;
+let currentResult = null;   // {content, topic, category, format, createdAt, name}
+let loadedVaultId = null;
+let progTimer = null;
+
+function toast(msg, isError=false){
+  const t = document.createElement("div");
+  t.className = "toast" + (isError ? " error" : "");
+  t.textContent = msg;
+  $("toasts").appendChild(t);
+  setTimeout(()=>{ t.style.opacity="0"; t.style.transition="opacity .4s"; setTimeout(()=>t.remove(),400); }, 3600);
+}
+function esc(s){ return (s||"").replace(/[&<>"']/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+function nowStamp(){
+  const d = new Date();
+  const p = n => String(n).padStart(2,"0");
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function download(filename, data, mime){
+  const blob = data instanceof Blob ? data : new Blob([data], {type: mime || "text/markdown;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 800);
+}
+function safeFileName(s){
+  return (s||"skill").replace(/[\\/:*?"<>|]/g,"").trim().slice(0,60) || "skill";
+}
+
+/* ════════════════════════ tabs ════════════════════════ */
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+    btn.classList.add("active");
+    $("tab-" + btn.dataset.tab).classList.add("active");
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+});
+
+/* ════════════════════════ API key ════════════════════════ */
+(function initKey(){
+  const saved = sessionStorage.getItem(KEY_STORE);
+  if(saved) $("apiKeyInput").value = saved;
+})();
+$("saveKeyBtn").addEventListener("click", ()=>{
+  const v = $("apiKeyInput").value.trim();
+  if(!v){ toast("API 키를 입력해 주세요.", true); return; }
+  sessionStorage.setItem(KEY_STORE, v);
+  toast("✅ API 키가 저장되었습니다 (이 브라우저 세션에만 보관)");
+});
+$("toggleKey").addEventListener("click", ()=>{
+  const inp = $("apiKeyInput");
+  inp.type = inp.type === "password" ? "text" : "password";
+});
+
+/* ════════════════════════ chips ════════════════════════ */
+(function initTopicChips(){
+  const box = $("topicChips");
+  TOPIC_EXAMPLES.forEach(t=>{
+    const c = document.createElement("button");
+    c.type = "button"; c.className = "chip"; c.textContent = t;
+    c.addEventListener("mousedown", e=>{ e.preventDefault(); $("inTopic").value = t; box.classList.remove("show"); });
+    box.appendChild(c);
+  });
+  $("inTopic").addEventListener("focus", ()=>box.classList.add("show"));
+  $("inTopic").addEventListener("blur", ()=>setTimeout(()=>box.classList.remove("show"),150));
+})();
+
+(function initPersonaChips(){
+  const wrap = $("personaChips");
+  Object.entries(PERSONAS).forEach(([cat, list])=>{
+    const h = document.createElement("div"); h.className="persona-cat"; h.textContent = cat; wrap.appendChild(h);
+    const row = document.createElement("div"); row.className="chips";
+    list.forEach(p=>{
+      const c = document.createElement("button");
+      c.type="button"; c.className="chip"; c.textContent = p;
+      c.addEventListener("click", ()=>{
+        const already = c.classList.contains("sel");
+        wrap.querySelectorAll(".chip").forEach(x=>x.classList.remove("sel"));
+        if(already){ $("inPersona").value = ""; }
+        else { c.classList.add("sel"); $("inPersona").value = p; }
+      });
+      row.appendChild(c);
+    });
+    wrap.appendChild(row);
+  });
+  $("inPersona").addEventListener("input", ()=>{
+    wrap.querySelectorAll(".chip").forEach(x=>{
+      x.classList.toggle("sel", x.textContent === $("inPersona").value.trim());
+    });
+  });
+})();
+
+/* ════════════════════════ generate ════════════════════════ */
+$("generateBtn").addEventListener("click", startGenerate);
+$("retryBtn").addEventListener("click", startGenerate);
+$("remakeBtn").addEventListener("click", ()=>{
+  loadedVaultId = null;
+  showView("form");
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+window.addEventListener("beforeunload", e=>{
+  if(isGenerating){ e.preventDefault(); e.returnValue = ""; }
+});
+
+function showView(which){
+  $("makerForm").style.display = which==="form" ? "" : "none";
+  $("makerProgress").style.display = which==="progress" ? "" : "none";
+  $("makerResult").style.display = which==="result" ? "" : "none";
+}
+
+function startProgressAnim(){
+  const items = [...$("progSteps").children];
+  items.forEach(li=>li.classList.remove("done","doing"));
+  $("progBar").style.width = "4%";
+  let step = 0;
+  items[0].classList.add("doing");
+  clearInterval(progTimer);
+  progTimer = setInterval(()=>{
+    if(step < 3){ // hold at step 4 (index 3→4 transition) until API done
+      items[step].classList.remove("doing"); items[step].classList.add("done");
+      items[step].querySelector(".dot").textContent = "✓";
+      step++;
+      items[step].classList.add("doing");
+      $("progBar").style.width = (8 + step*20) + "%";
+    } else {
+      const w = parseFloat($("progBar").style.width);
+      if(w < 88) $("progBar").style.width = (w + 2) + "%";
+    }
+  }, 14000);
+}
+function finishProgressAnim(){
+  clearInterval(progTimer);
+  const items = [...$("progSteps").children];
+  items.forEach(li=>{
+    li.classList.remove("doing"); li.classList.add("done");
+    li.querySelector(".dot").textContent = "✓";
+  });
+  $("progBar").style.width = "100%";
+}
+
+function collectInputs(){
+  return {
+    topic:    $("inTopic").value.trim(),
+    category: $("inCategory").value,
+    format:   $("inFormat").value,
+    persona:  $("inPersona").value.trim(),
+    task:     $("inTask").value.trim(),
+    audience: $("inAudience").value.trim(),
+    brand:    $("inBrand").value.trim() || "딥컴퍼스AI연구소",
+    trigger:  $("inTrigger").value.trim()
+  };
+}
+
+async function startGenerate(){
+  if(isGenerating) return;
+  $("retryBox").style.display = "none";
+
+  // validate key
+  const apiKey = sessionStorage.getItem(KEY_STORE) || $("apiKeyInput").value.trim();
+  if(!apiKey){
+    $("keyCard").scrollIntoView({behavior:"smooth", block:"center"});
+    $("keyCard").classList.remove("shake"); void $("keyCard").offsetWidth;
+    $("keyCard").classList.add("shake");
+    toast("먼저 API 키를 입력하고 저장해 주세요.", true);
+    return;
+  }
+  sessionStorage.setItem(KEY_STORE, apiKey);
+
+  // validate required
+  const inp = collectInputs();
+  let bad = false;
+  $("fTopic").classList.toggle("err", !inp.topic);
+  $("fTask").classList.toggle("err", !inp.task);
+  if(!inp.topic || !inp.task){
+    bad = true;
+    (!inp.topic ? $("inTopic") : $("inTask")).focus();
+    toast("필수 항목(스킬 주제, 핵심 작업)을 입력해 주세요.", true);
+  }
+  if(bad) return;
+
+  const userMsg =
+    `스킬 주제: ${inp.topic}\n카테고리: ${inp.category}\n출력 형식: ${inp.format}\n페르소나: ${inp.persona || "(지정 안 함 — 주제에 맞게 설계)"}\n` +
+    `핵심 작업: ${inp.task}\n대상 사용자: ${inp.audience || "(일반 사용자)"}\n브랜드: ${inp.brand}\n트리거 힌트: ${inp.trigger || "(주제에 맞는 트리거를 자동 설계)"}`;
+
+  isGenerating = true;
+  $("generateBtn").disabled = true;
+  showView("progress");
+  startProgressAnim();
+  window.scrollTo({top:0, behavior:"smooth"});
+
+  try{
+    const content = await callClaudeWithContinuation(apiKey, userMsg);
+    finishProgressAnim();
+    currentResult = {
+      content,
+      topic: inp.topic, category: inp.category, format: inp.format,
+      createdAt: new Date().toISOString()
+    };
+    loadedVaultId = null;
+    setTimeout(()=>{ renderResult(currentResult); showView("result"); }, 700);
+    toast("✅ SKILL.md 생성이 완료되었습니다!");
+  }catch(err){
+    clearInterval(progTimer);
+    console.error(err);
+    toast(err.userMessage || "오류가 발생했습니다. 다시 시도해 주세요.", true);
+    if(err.retryable){
+      $("retryBox").style.display = "";
+    }else{
+      showView("form");
+    }
+  }finally{
+    isGenerating = false;
+    $("generateBtn").disabled = false;
+  }
+}
+
+function stripFences(text){
+  let t = (text||"").trim();
+  // remove leading fence like ```markdown / ```md / ```
+  t = t.replace(/^```[a-zA-Z]*\s*\n?/, "");
+  // remove trailing fence
+  t = t.replace(/\n?```\s*$/, "");
+  return t.trim();
+}
+
+async function callClaude(apiKey, messages){
+  const controller = new AbortController();
+  const timer = setTimeout(()=>controller.abort(), 240000); // 4min safety timeout
+  let res;
+  try{
+    res = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: MAX_TOKENS,
+        system: SYSTEM_PROMPT,
+        messages
+      }),
+      signal: controller.signal
+    });
+  }catch(e){
+    clearTimeout(timer);
+    const err = new Error("network");
+    if(e.name === "AbortError"){
+      err.userMessage = "⏱ 서버 응답이 너무 늦습니다. [다시 시도] 버튼을 눌러 주세요.";
+      err.retryable = true;
+    }else{
+      err.userMessage = "🌐 네트워크 오류입니다. 인터넷 연결을 확인해 주세요. 사내망·확장프로그램이 api.anthropic.com 접속(CORS)을 차단하는 경우에도 발생할 수 있습니다.";
+      err.retryable = true;
+    }
+    throw err;
+  }
+  clearTimeout(timer);
+
+  if(!res.ok){
+    const err = new Error("http " + res.status);
+    if(res.status === 401){ err.userMessage = "🔑 API 키가 올바르지 않습니다. 키를 다시 확인해 주세요."; err.retryable = false; }
+    else if(res.status === 429){ err.userMessage = "🚦 요청이 많습니다. 잠시 후 다시 시도해 주세요."; err.retryable = true; }
+    else if(res.status === 529 || res.status >= 500){ err.userMessage = "🛠 서버가 혼잡합니다. 다시 시도 버튼을 눌러 주세요."; err.retryable = true; }
+    else {
+      let detail = "";
+      try{ const j = await res.json(); detail = j?.error?.message || ""; }catch(_){}
+      err.userMessage = `요청 오류(${res.status})가 발생했습니다.` + (detail ? " " + detail.slice(0,140) : "");
+      err.retryable = false;
+    }
+    throw err;
+  }
+  return res.json();
+}
+
+async function callClaudeWithContinuation(apiKey, userMsg){
+  const messages = [{ role: "user", content: userMsg }];
+  let data = await callClaude(apiKey, messages);
+  let full = (data.content || []).filter(b=>b.type==="text").map(b=>b.text).join("");
+
+  let attempts = 0;
+  while(data.stop_reason === "max_tokens" && attempts < 2){
+    attempts++;
+    messages.push({ role: "assistant", content: full });
+    messages.push({ role: "user", content: "이어서 계속 작성하세요. 중복 없이 이어서만 출력하세요." });
+    data = await callClaude(apiKey, messages);
+    const more = (data.content || []).filter(b=>b.type==="text").map(b=>b.text).join("");
+    // replace last assistant placeholder with merged text for potential next round
+    messages.splice(messages.length-2, 2);
+    full += more;
+  }
+  const cleaned = stripFences(full);
+  if(!cleaned || cleaned.length < 200){
+    const err = new Error("empty");
+    err.userMessage = "생성 결과가 비정상적으로 짧습니다. 다시 시도해 주세요.";
+    err.retryable = true;
+    throw err;
+  }
+  return cleaned;
+}
+
+/* ════════════════════════ result / stats ════════════════════════ */
+function parseSkillName(content){
+  const m = content.match(/^name:\s*(.+)$/m);
+  return m ? m[1].trim() : "";
+}
+function parseFrontmatter(content){
+  const m = content.match(/^---\s*\n([\s\S]*?)\n---/);
+  return m ? m[1] : "";
+}
+function countTriggers(content){
+  const fm = parseFrontmatter(content) || content.slice(0, 3000);
+  const quotes = fm.match(/["“]([^"”\n]{2,60})["”]/g);
+  return quotes ? quotes.length : 0;
+}
+function extractSection(content, headingRegex){
+  const lines = content.split("\n");
+  let start = -1;
+  for(let i=0;i<lines.length;i++){
+    if(headingRegex.test(lines[i])){ start = i; break; }
+  }
+  if(start === -1) return "";
+  let end = lines.length;
+  for(let i=start+1;i<lines.length;i++){
+    if(/^##\s/.test(lines[i])){ end = i; break; }
+  }
+  return lines.slice(start, end).join("\n").trim();
+}
+
+function computeStats(content){
+  return {
+    lines: content.split("\n").length,
+    chars: content.length,
+    sections: (content.match(/^##\s/gm) || []).length,
+    triggers: countTriggers(content),
+    name: parseSkillName(content) || "skill"
+  };
+}
+
+function renderResult(r){
+  const st = computeStats(r.content);
+  $("stLines").textContent = st.lines.toLocaleString();
+  $("stChars").textContent = st.chars.toLocaleString();
+  $("stSections").textContent = st.sections;
+  $("stTriggers").textContent = st.triggers;
+  $("stName").textContent = st.name;
+  $("stName").style.fontSize = st.name.length > 18 ? "13px" : "17px";
+  $("resultViewer").textContent = r.content;
+  $("resultMeta").textContent = `주제: ${r.topic} · 카테고리: ${r.category} · 출력 형식: ${r.format} · 생성: ${nowStamp()}`;
+}
+
+/* result actions */
+$("copyBtn").addEventListener("click", async ()=>{
+  if(!currentResult) return;
+  try{
+    await navigator.clipboard.writeText(currentResult.content);
+    toast("📋 SKILL.md 내용이 복사되었습니다.");
+  }catch(_){
+    // fallback
+    const ta = document.createElement("textarea");
+    ta.value = currentResult.content; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy"); ta.remove();
+    toast("📋 SKILL.md 내용이 복사되었습니다.");
+  }
+});
+
+$("dlMdBtn").addEventListener("click", ()=>{
+  if(!currentResult) return;
+  download("SKILL.md", currentResult.content);
+  toast("⬇ SKILL.md 파일이 다운로드되었습니다.");
+});
+
+$("dlSkillBtn").addEventListener("click", async ()=>{
+  if(!currentResult) return;
+  if(typeof JSZip === "undefined"){
+    toast("ZIP 라이브러리를 불러오지 못했습니다. 인터넷 연결 후 새로고침해 주세요.", true);
+    return;
+  }
+  const c = currentResult.content;
+  const st = computeStats(c);
+  const zip = new JSZip();
+  zip.file("SKILL.md", c);
+  zip.file("README.md", buildReadme(st, currentResult));
+  const ref = zip.folder("references");
+  ref.file("usage-guide.md", buildUsageGuide(c, currentResult));
+  ref.file("quality-checklist.md", buildChecklist(c, currentResult));
+  const blob = await zip.generateAsync({type:"blob"});
+  download(safeFileName(st.name) + ".skill", blob, "application/zip");
+  toast("📦 .skill 패키지가 다운로드되었습니다.");
+});
+
+function buildReadme(st, r){
+  return `# ${st.name} — Claude Skill 패키지
+
+**주제**: ${r.topic}
+**카테고리**: ${r.category} · **출력 형식**: ${r.format}
+**생성일**: ${nowStamp()} · 생성 도구: DeepCompass AI Lab SKILL COMPASS v1.0
+
+## 📦 패키지 구성
+\`\`\`
+${safeFileName(st.name)}.skill
+├── SKILL.md                    ← 스킬 본문 (지침 파일)
+├── README.md                   ← 이 파일 (설치 방법)
+└── references/
+    ├── usage-guide.md          ← 사용 예시
+    └── quality-checklist.md    ← 품질 체크리스트
+\`\`\`
+
+## 🚀 설치 방법
+
+### 방법 A — Claude 앱에 스킬 업로드 (권장)
+1. Claude 앱(웹/데스크톱) 접속 → **설정(Settings)** → **기능(Capabilities/Features)**
+2. **스킬(Skills)** 섹션에서 **업로드** 버튼 클릭
+3. 이 \`.skill\` 파일을 업로드
+4. 채팅에서 트리거 문장을 입력하면 스킬이 자동 실행됩니다.
+
+### 방법 B — Claude Project 지침에 붙여넣기
+1. Claude에서 새 **Project** 생성
+2. Project **지침(Instructions)** 영역에 \`SKILL.md\` 내용 전체를 붙여넣기
+3. 해당 Project 안에서 대화하면 스킬 규칙이 적용됩니다.
+
+## 🧪 테스트
+SKILL.md의 frontmatter(description)에 나열된 트리거 문장 중 하나를 Claude에 입력해
+스킬이 자동으로 실행되는지 확인하세요.
+
+---
+DEEPCOMPASS AI LAB · 딥컴퍼스AI연구소 · 문의: emas7788@naver.com · blog.naver.com/emas7788
+© 2026 고연심. Powered by Claude AI (Anthropic).
+`;
+}
+
+function buildUsageGuide(content, r){
+  const sec = extractSection(content, /^##\s*💬|^##\s.*사용 예시/);
+  const body = sec || `## 💬 사용 예시
+
+1. **기본 실행** — "${r.topic} 해줘"라고 요청하면 스킬이 기본 워크플로우대로 결과물을 생성합니다.
+2. **조건 지정 실행** — 대상·분량·어조 등 조건을 함께 말하면(예: "초보자 대상으로, 짧게") 해당 조건을 반영합니다.
+3. **수정 요청** — 생성 결과에 대해 "2번 섹션만 더 자세히"처럼 부분 수정을 요청하면 체크리스트 기준을 유지하며 다시 작성합니다.`;
+  return `# 사용 가이드 — ${r.topic}
+
+이 문서는 SKILL.md에서 발췌·요약한 사용 예시입니다.
+
+${body}
+
+---
+생성: DeepCompass AI Lab SKILL COMPASS v1.0
+`;
+}
+
+function buildChecklist(content, r){
+  const sec = extractSection(content, /^##\s*✅|^##\s.*품질 체크리스트/);
+  const body = sec || `## ✅ 품질 체크리스트
+
+- [ ] 요청 주제와 결과물이 정확히 일치하는가
+- [ ] 정의된 출력 형식(${r.format})을 준수했는가
+- [ ] 페르소나의 어조·전문성이 일관되게 유지되는가
+- [ ] 사실 오류·과장 표현이 없는가
+- [ ] 대상 사용자 눈높이에 맞는 표현인가
+- [ ] 섹션 구조가 스킬 정의와 일치하는가
+- [ ] 브랜드 표기 규칙을 지켰는가
+- [ ] 맞춤법·띄어쓰기 오류가 없는가
+- [ ] 분량이 적절한가
+- [ ] 마지막에 후속 제안을 포함했는가`;
+  return `# 품질 체크리스트 — ${r.topic}
+
+이 문서는 SKILL.md에서 발췌한 자체 점검 체크리스트입니다.
+
+${body}
+
+---
+생성: DeepCompass AI Lab SKILL COMPASS v1.0
+`;
+}
+
+/* ════════════════════════ vault (localStorage) ════════════════════════ */
+function vaultLoad(){
+  try{ return JSON.parse(localStorage.getItem(VAULT_STORE)) || []; }
+  catch(_){ return []; }
+}
+function vaultSave(list){
+  try{ localStorage.setItem(VAULT_STORE, JSON.stringify(list)); }
+  catch(e){ toast("보관함 저장 실패: 저장 공간이 가득 찼을 수 있습니다.", true); }
+}
+
+$("saveVaultBtn").addEventListener("click", ()=>{
+  if(!currentResult) return;
+  const list = vaultLoad();
+  const st = computeStats(currentResult.content);
+  if(loadedVaultId){
+    const it = list.find(x=>x.id===loadedVaultId);
+    if(it){
+      it.content = currentResult.content;
+      it.updatedAt = new Date().toISOString();
+      vaultSave(list); renderVault();
+      toast("☁ 보관함의 스킬이 업데이트되었습니다.");
+      return;
+    }
+  }
+  const item = {
+    id: "sk_" + Date.now() + "_" + Math.random().toString(36).slice(2,7),
+    title: currentResult.topic,
+    name: st.name,
+    category: currentResult.category,
+    format: currentResult.format,
+    memo: "",
+    content: currentResult.content,
+    createdAt: currentResult.createdAt || new Date().toISOString()
+  };
+  list.unshift(item);
+  vaultSave(list);
+  loadedVaultId = item.id;
+  renderVault();
+  toast("☁ 보관함에 저장되었습니다.");
+});
+
+function openVault(){ $("vaultPanel").classList.add("open"); $("vaultOverlay").classList.add("open"); renderVault(); }
+function closeVault(){ $("vaultPanel").classList.remove("open"); $("vaultOverlay").classList.remove("open"); }
+$("openVault").addEventListener("click", openVault);
+$("closeVault").addEventListener("click", closeVault);
+$("vaultOverlay").addEventListener("click", closeVault);
+$("vaultSearch").addEventListener("input", renderVault);
+
+function renderVault(){
+  const list = vaultLoad();
+  const q = ($("vaultSearch").value || "").trim().toLowerCase();
+  const filtered = q ? list.filter(x=>
+      (x.title||"").toLowerCase().includes(q) ||
+      (x.name||"").toLowerCase().includes(q) ||
+      (x.category||"").toLowerCase().includes(q)) : list;
+
+  // dashboard
+  $("vdTotal").textContent = list.length;
+  $("vdCats").textContent = new Set(list.map(x=>x.category)).size;
+  const now = new Date();
+  $("vdMonth").textContent = list.filter(x=>{
+    const d = new Date(x.createdAt);
+    return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+  }).length;
+
+  const box = $("vaultList");
+  box.innerHTML = "";
+  if(!filtered.length){
+    box.innerHTML = `<div class="vault-empty">${list.length ? "검색 결과가 없습니다." : "저장된 스킬이 없습니다.<br>스킬을 생성한 뒤 [☁ 보관함 저장]을 눌러보세요."}</div>`;
+    return;
+  }
+  filtered.forEach(item=>{
+    const d = new Date(item.createdAt);
+    const el = document.createElement("div");
+    el.className = "vitem";
+    el.innerHTML = `
+      <div class="vt">${esc(item.title)}</div>
+      <div class="vm">${esc(item.category)} · ${esc(item.name)} · ${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}${item.memo ? " · 📝 " + esc(item.memo) : ""}</div>
+      <div class="vbtns">
+        <button class="vbtn" data-act="load">📂 불러오기</button>
+        <button class="vbtn" data-act="dl">⬇ .md</button>
+        <button class="vbtn" data-act="edit">✏ 수정</button>
+        <button class="vbtn danger" data-act="del">🗑 삭제</button>
+      </div>`;
+    el.querySelector('[data-act="load"]').addEventListener("click", ()=>loadVaultItem(item.id));
+    el.querySelector('[data-act="dl"]').addEventListener("click", ()=>{
+      download(safeFileName(item.name || item.title) + ".md", item.content);
+      toast("⬇ 다운로드되었습니다.");
+    });
+    el.querySelector('[data-act="edit"]').addEventListener("click", ()=>editVaultItem(item.id));
+    el.querySelector('[data-act="del"]').addEventListener("click", ()=>deleteVaultItem(item.id));
+    box.appendChild(el);
+  });
+}
+
+function loadVaultItem(id){
+  const item = vaultLoad().find(x=>x.id===id);
+  if(!item) return;
+  currentResult = {
+    content: item.content, topic: item.title,
+    category: item.category, format: item.format || "—",
+    createdAt: item.createdAt
+  };
+  loadedVaultId = id;
+  // switch to maker tab & result view
+  document.querySelector('.tab-btn[data-tab="maker"]').click();
+  renderResult(currentResult);
+  showView("result");
+  closeVault();
+  toast("📂 보관함 스킬을 불러왔습니다.");
+}
+
+function editVaultItem(id){
+  const list = vaultLoad();
+  const item = list.find(x=>x.id===id);
+  if(!item) return;
+  const newTitle = prompt("스킬 이름을 수정하세요:", item.title);
+  if(newTitle === null) return;
+  const newMemo = prompt("메모를 입력하세요 (비워도 됩니다):", item.memo || "");
+  if(newMemo === null) return;
+  item.title = newTitle.trim() || item.title;
+  item.memo = newMemo.trim();
+  vaultSave(list);
+  renderVault();
+  toast("✏ 수정되었습니다.");
+}
+
+function deleteVaultItem(id){
+  const list = vaultLoad();
+  const item = list.find(x=>x.id===id);
+  if(!item) return;
+  if(!confirm(`'${item.title}' 스킬을 삭제할까요?\n이 작업은 되돌릴 수 없습니다.`)) return;
+  vaultSave(list.filter(x=>x.id!==id));
+  if(loadedVaultId === id) loadedVaultId = null;
+  renderVault();
+  toast("🗑 삭제되었습니다.");
+}
+
+$("exportAllBtn").addEventListener("click", ()=>{
+  const list = vaultLoad();
+  if(!list.length){ toast("내보낼 스킬이 없습니다.", true); return; }
+  const parts = list.map((x,i)=>
+    `<!-- ═══════════ SKILL ${i+1}/${list.length} : ${x.title} (${x.category}) ═══════════ -->\n\n${x.content}`
+  );
+  const doc = `# DeepCompass SKILL COMPASS — 전체 스킬 백업\n\n생성일: ${nowStamp()} · 총 ${list.length}개\n\n---\n\n` + parts.join("\n\n\n");
+  download("deepcompass-skills-backup.md", doc);
+  toast(`⬇ 스킬 ${list.length}개를 하나의 .md로 내보냈습니다.`);
+});
+
+/* esc key closes vault */
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeVault(); });
+</script>
+</body>
+</html>
