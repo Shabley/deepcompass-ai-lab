@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://shabley.github.io/deepcompass-ai-lab/sitemap.xml
+Sitemap: https://deepcompass-ai-lab.vercel.app/sitemap.xml
