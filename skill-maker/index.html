@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SKILL COMPASS — DeepCompass AI Lab | Claude 스킬 자동 생성기</title>
-<meta name="description" content="주제만 입력하면 Claude용 SKILL.md를 60초 만에 자동 생성합니다. 딥컴퍼스AI연구소 SKILL COMPASS.">
+<meta name="description" content="로그인 없이, API 키 없이 주제만 입력하면 Claude용 SKILL.md 초안을 바로 생성합니다. 딥컴퍼스AI연구소 SKILL COMPASS.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -268,7 +268,7 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
   <div class="wrap">
     <div class="logo-line">DEEPCOMPASS AI LAB</div>
     <h1 class="title">SKILL COMPASS</h1>
-    <p class="subcopy">주제만 입력하면 Claude용 SKILL.md를 60초 만에 자동 생성합니다</p>
+    <p class="subcopy">로그인 없이 · API 키 없이 · 주제만 입력하면 Claude용 SKILL.md 초안을 바로 생성합니다</p>
   </div>
 </header>
 
@@ -276,7 +276,7 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
   <button class="tab-btn active" data-tab="maker">⚡ SKILL COMPASS</button>
   <button class="tab-btn" data-tab="howto">📖 사용 가이드</button>
   <button class="tab-btn" data-tab="what">📘 SKILL이란?</button>
-  <button class="tab-btn" data-tab="apikey">🔑 API KEY 발급 가이드</button>
+  <button class="tab-btn" data-tab="apikey">🚀 활용 가이드</button>
   <button class="vault-btn" id="openVault">📚 내 스킬 보관함</button>
 </nav>
 
@@ -288,7 +288,7 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
   <!-- form view -->
   <div id="makerForm">
 
-    <div class="card keycard" id="keyCard">
+    <div class="card keycard" id="keyCard" style="display:none">
       <h2>🔑 Claude API KEY</h2>
       <p class="desc">스킬 생성을 위해 Anthropic API 키가 필요합니다. 발급 방법은 상단 <b>API KEY 발급 가이드</b> 탭을 참고하세요.</p>
       <div class="keyrow">
@@ -364,7 +364,7 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
       </div>
     </div>
 
-    <button class="cta" id="generateBtn">⚡ SKILL.md 파일 자동 생성</button>
+    <button class="cta" id="generateBtn">⚡ 무료로 SKILL.md 초안 만들기</button>
   </div>
 
   <!-- progress view -->
@@ -379,7 +379,7 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
         <li data-step="3"><span class="dot">4</span>품질 체크리스트 생성 중</li>
         <li data-step="4"><span class="dot">5</span>최종 SKILL.md 완성 중</li>
       </ul>
-      <p class="wait-note">⏳ 60~120초 소요됩니다. 페이지를 닫지 마세요.</p>
+      <p class="wait-note">⏳ 브라우저 안에서 안전하게 초안을 만드는 중입니다. 잠시만 기다려 주세요.</p>
       <div class="retry-box" id="retryBox" style="display:none">
         <button class="retry-btn" id="retryBtn">↺ 다시 시도</button>
       </div>
@@ -416,9 +416,9 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
     <h2>📖 SKILL COMPASS 사용 가이드</h2>
     <p class="desc">7단계만 따라 하면 나만의 Claude 스킬이 완성됩니다.</p>
     <div class="guide-grid">
-      <div class="gcard c1"><span class="gnum">01</span><h3>🔑 API 키 입력</h3><p>console.anthropic.com에서 발급받은 API 키를 SKILL COMPASS 탭 상단의 황금색 박스에 입력하고 [저장]을 누릅니다. 키는 브라우저 세션에만 보관됩니다.</p></div>
-      <div class="gcard c2"><span class="gnum">02</span><h3>📝 스킬 정보 입력</h3><p>스킬 주제(필수), 카테고리, 출력 형식, 페르소나를 고르고 핵심 작업(필수)을 구체적으로 적습니다. 트리거 힌트를 적으면 스킬 자동 실행 정확도가 크게 올라갑니다.</p></div>
-      <div class="gcard c3"><span class="gnum">03</span><h3>⚡ 생성</h3><p>[SKILL.md 파일 자동 생성] 버튼을 누르면 Claude가 300줄 이상의 전문가급 스킬 파일을 작성합니다. 60~120초 정도 걸리니 페이지를 닫지 마세요.</p></div>
+      <div class="gcard c1"><span class="gnum">01</span><h3>📝 주제 입력</h3><p>회원가입이나 API 키 없이 스킬 주제와 핵심 작업만 입력합니다. 처음 쓰는 분도 예시 칩을 눌러 바로 시작할 수 있습니다.</p></div>
+      <div class="gcard c2"><span class="gnum">02</span><h3>🎯 세부 정보 보강</h3><p>카테고리, 출력 형식, 페르소나, 대상 사용자를 선택하면 더 실무적인 스킬 초안이 만들어집니다.</p></div>
+      <div class="gcard c3"><span class="gnum">03</span><h3>⚡ 즉시 생성</h3><p>[무료로 SKILL.md 초안 만들기] 버튼을 누르면 브라우저 안에서 바로 Claude용 스킬 초안이 생성됩니다.</p></div>
       <div class="gcard c4"><span class="gnum">04</span><h3>⬇ 다운로드</h3><p>결과 화면에서 <b>.md 단일 파일</b> 또는 README·참고자료가 포함된 <b>.skill 패키지(ZIP)</b>로 다운로드합니다. 보관함에 저장해두면 언제든 다시 불러올 수 있습니다.</p></div>
       <div class="gcard c5"><span class="gnum">05</span><h3>🤖 Claude에 등록</h3><p><b>방법 A</b> — Claude 앱 &gt; 설정 &gt; 기능 &gt; 스킬(Skills)에서 .skill 파일 업로드.<br><b>방법 B</b> — SKILL.md 내용을 복사해 Claude Project의 지침(Instructions)에 붙여넣기.</p></div>
       <div class="gcard c6"><span class="gnum">06</span><h3>🧪 트리거 테스트</h3><p>스킬에 정의된 트리거 문장(예: "보도자료 써줘")을 Claude에 입력해 스킬이 자동 실행되는지 확인합니다. 잘 안 되면 트리거 힌트를 보강해 다시 생성하세요.</p></div>
@@ -428,11 +428,11 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
 
   <div class="card">
     <h2>❓ 자주 묻는 질문 (FAQ)</h2>
-    <details class="acc"><summary>생성 중 타임아웃/혼잡 오류가 떠요</summary><div class="acc-body">Anthropic 서버가 일시적으로 혼잡한 경우입니다. [다시 시도] 버튼을 누르거나 1~2분 후 재시도하세요. 같은 증상이 반복되면 네트워크(회사 방화벽·VPN)가 api.anthropic.com 접속을 막고 있는지 확인해 주세요.</div></details>
-    <details class="acc"><summary>API 키를 잃어버렸어요</summary><div class="acc-body">API 키는 발급 시 한 번만 표시되며 다시 볼 수 없습니다. console.anthropic.com &gt; API Keys에서 기존 키를 삭제하고 새 키를 발급받아 다시 입력하세요. 본 앱은 키를 세션에만 저장하므로 브라우저를 닫으면 재입력이 필요합니다.</div></details>
-    <details class="acc"><summary>생성된 내용이 중간에 잘렸어요</summary><div class="acc-body">SKILL COMPASS는 응답이 길이 제한에 걸리면 자동으로 최대 2회까지 이어쓰기를 요청해 병합합니다. 그래도 잘렸다면 핵심 작업 설명을 조금 줄여서 다시 생성해 보세요.</div></details>
+    <details class="acc"><summary>API 키 없이도 정말 되나요?</summary><div class="acc-body">네. 이 공개용 버전은 Claude API를 직접 호출하지 않고, 입력한 내용을 바탕으로 브라우저 안에서 SKILL.md 초안을 즉시 만들어 줍니다. 이후 Claude에 붙여넣어 다듬으면 됩니다.</div></details>
+    <details class="acc"><summary>생성된 스킬은 어디에 쓰나요?</summary><div class="acc-body">생성된 SKILL.md 내용을 Claude Project 지침에 붙여넣거나, .skill 패키지로 다운로드해 Claude의 Skills 기능에 업로드하면 됩니다.</div></details>
+    <details class="acc"><summary>더 고급스럽게 만들고 싶으면?</summary><div class="acc-body">초안을 Claude에게 붙여넣고 “이 SKILL.md를 더 전문적으로 보강해줘”라고 요청하면 됩니다. 핵심 작업과 트리거 문장을 구체적으로 쓸수록 품질이 좋아집니다.</div></details>
     <details class="acc"><summary>보관함 데이터는 어디에 저장되나요?</summary><div class="acc-body">브라우저의 localStorage에 저장됩니다. 서버 전송이 전혀 없어 안전하지만, 같은 브라우저·같은 기기에서만 보입니다. 브라우저 데이터를 삭제하면 함께 지워지니 중요한 스킬은 [전체 내보내기]로 백업하세요.</div></details>
-    <details class="acc"><summary>생성 비용은 얼마나 드나요?</summary><div class="acc-body">Claude API 사용량 기준으로 스킬 1개당 <b>약 $0.02~0.05</b> 수준입니다(분량에 따라 변동). Anthropic 콘솔의 Usage 페이지에서 실제 사용량을 확인할 수 있습니다.</div></details>
+    <details class="acc"><summary>비용이 발생하나요?</summary><div class="acc-body">이 페이지에서 초안을 생성하는 것 자체는 무료입니다. 단, 생성된 스킬을 Claude에서 실제로 사용할 때는 사용자의 Claude 요금제 또는 API 사용 환경에 따라 비용이 발생할 수 있습니다.</div></details>
   </div>
 </section>
 
@@ -492,23 +492,23 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
   </div>
 </section>
 
-<!-- ══════════ TAB 4 : API KEY GUIDE ══════════ -->
+<!-- ══════════ TAB 4 : PRACTICAL GUIDE ══════════ -->
 <section id="tab-apikey" class="tab-panel">
   <div class="card">
-    <h2>🔑 Anthropic API KEY 발급 가이드</h2>
-    <p class="desc">console.anthropic.com 기준 5단계입니다. 처음이라면 5분이면 충분합니다.</p>
+    <h2>🚀 만든 스킬 활용 가이드</h2>
+    <p class="desc">API 키 없이 만든 초안을 Claude에서 실제 업무용 스킬로 활용하는 방법입니다.</p>
     <div class="guide-grid">
-      <div class="gcard c1"><span class="gnum">01</span><h3>회원 가입</h3><p><a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>에 접속해 이메일 또는 Google 계정으로 가입합니다.</p></div>
-      <div class="gcard c2"><span class="gnum">02</span><h3>Billing 카드 등록</h3><p>좌측 메뉴 <b>Billing</b>에서 결제 카드를 등록합니다. 신규 계정에는 소액의 무료 크레딧이 제공되는 경우가 있어 먼저 테스트해볼 수 있습니다.</p></div>
-      <div class="gcard c3"><span class="gnum">03</span><h3>Create Key</h3><p>좌측 메뉴 <b>API Keys</b> &gt; <b>Create Key</b> 버튼을 눌러 키 이름(예: skill-maker)을 정하고 생성합니다.</p></div>
-      <div class="gcard c4"><span class="gnum">04</span><h3>키 복사</h3><p>생성된 키(sk-ant-...)를 즉시 복사해 안전한 곳에 보관하세요. <b>⚠ 키는 이 화면에서 한 번만 표시되며 다시 볼 수 없습니다.</b></p></div>
-      <div class="gcard c5"><span class="gnum">05</span><h3>본 앱에 입력</h3><p>SKILL COMPASS 탭 상단 황금색 박스에 키를 붙여넣고 [저장]을 누르면 준비 완료입니다.</p></div>
+      <div class="gcard c1"><span class="gnum">01</span><h3>초안 생성</h3><p>스킬 주제와 핵심 작업을 입력하고 SKILL.md 초안을 만듭니다. 처음에는 완벽함보다 빠른 초안이 중요합니다.</p></div>
+      <div class="gcard c2"><span class="gnum">02</span><h3>Claude에서 다듬기</h3><p>생성된 내용을 Claude에 붙여넣고 “이 스킬을 더 전문적으로 보강해줘”라고 요청하면 품질을 높일 수 있습니다.</p></div>
+      <div class="gcard c3"><span class="gnum">03</span><h3>Project 지침에 붙여넣기</h3><p>Claude Project의 지침(Instructions)에 SKILL.md 내용을 붙여넣으면 해당 프로젝트 안에서 스킬처럼 사용할 수 있습니다.</p></div>
+      <div class="gcard c4"><span class="gnum">04</span><h3>.skill 패키지 저장</h3><p>다운로드한 .skill 파일은 백업하거나 팀원과 공유할 수 있습니다. 조직 내 반복 업무 표준화에 유용합니다.</p></div>
+      <div class="gcard c5"><span class="gnum">05</span><h3>트리거 테스트</h3><p>스킬에 적힌 예시 문장을 Claude에 입력해 원하는 방식으로 실행되는지 확인하고, 부족하면 트리거 문장을 추가하세요.</p></div>
     </div>
     <div class="warn-box">
-      ⚠ <b>과금 주의사항</b><br>
-      · Billing &gt; <b>Usage Limit(사용 한도)</b>를 반드시 설정해 예상치 못한 과금을 방지하세요. (예: 월 $5)<br>
-      · API 키는 비밀번호와 같습니다. <b>절대 타인과 공유하거나 공개 게시물에 올리지 마세요.</b><br>
-      · 키가 유출된 것 같으면 즉시 콘솔에서 해당 키를 삭제(Revoke)하고 새로 발급하세요.
+      ⚠ <b>안내</b><br>
+      · 이 페이지는 공개용 초안 생성기입니다. 사용자의 API 키나 비밀번호를 요구하지 않습니다.<br>
+      · 실제 Claude Skills 업로드 기능은 Claude 계정/요금제에 따라 제공 범위가 다를 수 있습니다.<br>
+      · 중요한 업무에 쓰기 전에는 생성된 스킬 내용을 반드시 한 번 검토하세요.
     </div>
   </div>
 </section>
@@ -541,7 +541,7 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
   <div class="wrap">
     <div class="fb">DEEPCOMPASS AI LAB · SKILL COMPASS v1.0</div>
     딥컴퍼스AI연구소 · 문의: <a href="mailto:emas7788@naver.com">emas7788@naver.com</a> · <a href="https://blog.naver.com/emas7788" target="_blank" rel="noopener">blog.naver.com/emas7788</a><br>
-    © 2026 고연심. Powered by Claude AI (Anthropic).
+    © 2026 고연심. 공개용 SKILL.md 초안 생성기.
   </div>
 </footer>
 
@@ -768,17 +768,6 @@ async function startGenerate(){
   if(isGenerating) return;
   $("retryBox").style.display = "none";
 
-  // validate key
-  const apiKey = sessionStorage.getItem(KEY_STORE) || $("apiKeyInput").value.trim();
-  if(!apiKey){
-    $("keyCard").scrollIntoView({behavior:"smooth", block:"center"});
-    $("keyCard").classList.remove("shake"); void $("keyCard").offsetWidth;
-    $("keyCard").classList.add("shake");
-    toast("먼저 API 키를 입력하고 저장해 주세요.", true);
-    return;
-  }
-  sessionStorage.setItem(KEY_STORE, apiKey);
-
   // validate required
   const inp = collectInputs();
   let bad = false;
@@ -791,10 +780,6 @@ async function startGenerate(){
   }
   if(bad) return;
 
-  const userMsg =
-    `스킬 주제: ${inp.topic}\n카테고리: ${inp.category}\n출력 형식: ${inp.format}\n페르소나: ${inp.persona || "(지정 안 함 — 주제에 맞게 설계)"}\n` +
-    `핵심 작업: ${inp.task}\n대상 사용자: ${inp.audience || "(일반 사용자)"}\n브랜드: ${inp.brand}\n트리거 힌트: ${inp.trigger || "(주제에 맞는 트리거를 자동 설계)"}`;
-
   isGenerating = true;
   $("generateBtn").disabled = true;
   showView("progress");
@@ -802,7 +787,8 @@ async function startGenerate(){
   window.scrollTo({top:0, behavior:"smooth"});
 
   try{
-    const content = await callClaudeWithContinuation(apiKey, userMsg);
+    await new Promise(resolve=>setTimeout(resolve, 900));
+    const content = buildLocalSkill(inp);
     finishProgressAnim();
     currentResult = {
       content,
@@ -825,6 +811,195 @@ async function startGenerate(){
     isGenerating = false;
     $("generateBtn").disabled = false;
   }
+}
+
+function slugifyKo(s){
+  const ascii = (s || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48);
+  if(ascii) return ascii;
+  const map = {"콘텐츠 생성":"content","교육·강의":"education","마케팅·홍보":"marketing","문서 작성":"document","데이터 분석":"data","코드·개발":"code","비즈니스 전략":"business","기타":"custom"};
+  const cat = map[$("inCategory")?.value] || "custom";
+  return `${cat}-skill`;
+}
+
+function buildTriggerList(inp){
+  const topic = inp.topic || "업무";
+  const hints = (inp.trigger || "")
+    .split(/[\n,·;]/)
+    .map(x=>x.trim().replace(/^['\"]|['\"]$/g,""))
+    .filter(Boolean);
+  const defaults = [
+    `${topic} 만들어줘`, `${topic} 작성해줘`, `${topic} 초안 작성`, `${topic} 자동화해줘`,
+    `${topic} 템플릿 만들어줘`, `${topic} 실무용으로 정리해줘`, `${topic} 결과물 만들어줘`,
+    `${topic} 작업 도와줘`, `${topic} 전문가처럼 작성`, `${topic} 바로 쓸 수 있게 만들어줘`,
+    `${topic} 단계별로 처리해줘`, `${topic} 품질 체크까지 해줘`, `${topic} 양식 만들어줘`,
+    `${topic} 예시 포함해서 작성`, `${topic} 업무 프로세스 설계`
+  ];
+  return [...new Set([...hints, ...defaults])].slice(0, 18);
+}
+
+function outputGuide(format){
+  if(/PPTX/.test(format)) return `- PPTX 결과물은 표지 → 목차 → 핵심 내용 → 실습/사례 → 정리/CTA 순서로 설계한다.\n- 슬라이드별 제목, 핵심 bullet, 발표자 노트를 함께 제안한다.\n- 컬러는 Deep Navy(#0D1B2E), AI Mint(#7FD8C4), Gold(#C9A84C)를 기본으로 한다.`;
+  if(/DOCX/.test(format)) return `- DOCX 결과물은 제목, 개요, 본문, 표/체크리스트, 결론 구조로 작성한다.\n- 문단 제목을 명확히 나누고 실제 업무 문서처럼 바로 붙여넣을 수 있게 쓴다.\n- 필요한 경우 표 형식과 체크박스를 포함한다.`;
+  if(/HTML/.test(format)) return `- HTML 결과물은 단일 파일 기준으로 작성한다.\n- 모바일 반응형, 접근성, 명확한 CTA, 시각적 계층 구조를 포함한다.\n- CSS 컬러/폰트/카드 레이아웃 지침을 함께 제공한다.`;
+  if(/Excel|CSV/.test(format)) return `- Excel·CSV 결과물은 컬럼명, 데이터 예시, 계산/분류 기준을 명확히 제시한다.\n- 사용자가 그대로 표로 옮길 수 있도록 행/열 구조를 먼저 설계한다.`;
+  return `- 결과물은 마크다운 중심으로 작성한다.\n- 제목, 요약, 본문, 체크리스트, 다음 행동 순서를 명확히 나눈다.\n- 사용자가 복사해 바로 활용할 수 있는 완성형 문장으로 제공한다.`;
+}
+
+function buildLocalSkill(inp){
+  const skillName = slugifyKo(inp.topic);
+  const persona = inp.persona || `${inp.category} 분야의 실무형 AI 업무 자동화 전문가`;
+  const audience = inp.audience || "AI를 업무에 활용하려는 일반 사용자와 실무 담당자";
+  const triggers = buildTriggerList(inp);
+  const triggerLines = triggers.map(t=>`  - "${t}"`).join("\n");
+  const styleBrand = inp.brand || "딥컴퍼스AI연구소";
+  return `---
+name: ${skillName}
+description: >
+  ${inp.topic} 업무를 일관된 절차와 품질 기준에 따라 수행하도록 돕는 Claude Skill입니다.
+  다음 상황에서 반드시 이 스킬을 사용할 것:
+${triggerLines}
+  위 표현 중 하나라도 언급되며 생성·작성·정리·자동화 의도가 보이면 반드시 이 스킬을 사용할 것.
+---
+
+# ${inp.topic}
+
+## 🎭 페르소나 — 역할·전문성·말투 정의
+
+당신은 **${persona}**입니다. 사용자가 원하는 결과물을 빠르게 파악하고, 실무에서 바로 쓸 수 있는 수준으로 구조화합니다.
+
+- 전문성: ${inp.category} 영역의 실무 프로세스, 문서화, 품질 검수 기준을 이해합니다.
+- 태도: 초보자도 이해할 수 있게 쉽게 설명하되, 결과물은 전문가 수준으로 완성합니다.
+- 말투: 명확하고 친절하며, 불필요한 장황함을 줄이고 실행 중심으로 답합니다.
+- 기준: 사용자의 목적, 대상, 맥락, 출력 형식을 먼저 반영합니다.
+
+## 🎯 목적과 범위
+
+### 이 스킬이 수행하는 것
+
+- ${inp.topic} 관련 결과물의 구조를 설계합니다.
+- 사용자가 제공한 핵심 작업을 바탕으로 초안, 템플릿, 체크리스트, 실행 절차를 만듭니다.
+- 누락된 정보가 있어도 합리적인 기본값을 적용해 1차 결과물을 제시합니다.
+- 필요한 경우 사용자가 바로 수정할 수 있도록 선택지를 제공합니다.
+
+### 이 스킬이 수행하지 않는 것
+
+- 사실 확인이 필요한 최신 정보는 확인 없이 단정하지 않습니다.
+- 법률, 의료, 세무 등 전문 자문이 필요한 영역은 최종 판단을 대신하지 않습니다.
+- 사용자의 민감정보, 비밀번호, API 키를 요구하지 않습니다.
+
+## 📥 입력 처리
+
+사용자가 제공하면 좋은 정보는 다음과 같습니다.
+
+1. 작업 주제: ${inp.topic}
+2. 핵심 작업: ${inp.task}
+3. 대상 사용자: ${audience}
+4. 브랜드/조직명: ${styleBrand}
+5. 원하는 출력 형식: ${inp.format}
+6. 분량, 톤, 마감일, 활용 채널 등 추가 조건
+
+정보가 부족하면 다음 기본값을 적용합니다.
+
+- 대상: ${audience}
+- 톤: 전문적이지만 이해하기 쉬운 설명체
+- 분량: 바로 검토 가능한 중간 분량
+- 구조: 요약 → 본문 → 실행 절차 → 체크리스트 → 다음 행동
+
+필수 정보가 심하게 부족한 경우에는 질문을 3개 이하로만 합니다.
+
+## ⚙️ 작업 워크플로우
+
+### STEP 1. 의도 파악
+- 사용자의 요청에서 최종 결과물, 대상, 목적, 제약조건을 파악합니다.
+- 요청이 모호하면 가장 가능성 높은 업무 목적을 추정하고, 추정 내용을 짧게 밝힙니다.
+
+### STEP 2. 결과물 구조 설계
+- ${inp.format} 형식에 맞는 목차와 섹션을 먼저 설계합니다.
+- 초보자도 따라올 수 있도록 큰 구조를 단순하게 잡습니다.
+
+### STEP 3. 핵심 내용 작성
+- 사용자의 핵심 작업을 중심으로 본문을 작성합니다.
+- 추상적인 표현보다 실제 업무에서 바로 쓸 수 있는 문장과 항목을 우선합니다.
+
+### STEP 4. 품질 보강
+- 누락된 관점, 실무 체크포인트, 예시, 주의사항을 추가합니다.
+- 결과물이 너무 일반적이면 대상 사용자와 브랜드 맥락에 맞춰 다시 구체화합니다.
+
+### STEP 5. 최종 정리
+- 사용자가 바로 복사·활용할 수 있도록 불필요한 설명을 줄이고 완성형으로 출력합니다.
+- 마지막에는 필요 시 “다음에 보강하면 좋은 점”을 짧게 제안합니다.
+
+## 📤 출력 형식
+
+요청된 기본 출력 형식은 **${inp.format}**입니다.
+
+${outputGuide(inp.format)}
+
+출력은 다음 원칙을 따릅니다.
+
+- 제목과 소제목을 명확히 구분합니다.
+- 핵심 내용은 bullet 또는 번호 목록으로 정리합니다.
+- 실제 사용자가 바로 실행할 수 있는 문장으로 씁니다.
+- 필요한 경우 예시 문안, 표, 체크리스트를 포함합니다.
+
+## 🎨 스타일 가이드
+
+- 브랜드명: ${styleBrand}
+- 문체: 전문적, 실용적, 친절한 설명체
+- 표현: 과장보다 신뢰감, 추상보다 실행 중심
+- 구성: 핵심 먼저, 세부 설명은 뒤에 배치
+- 금지: 근거 없는 단정, 과도한 홍보문구, 불필요한 영어 남발
+
+## ✅ 품질 체크리스트
+
+완료 전 다음 항목을 스스로 점검합니다.
+
+- [ ] 사용자의 핵심 요청을 정확히 반영했는가?
+- [ ] 대상 사용자가 이해하기 쉬운가?
+- [ ] 결과물 구조가 명확한가?
+- [ ] 바로 복사해 활용 가능한 문장인가?
+- [ ] ${inp.format} 형식에 맞게 작성했는가?
+- [ ] 브랜드/조직명이 자연스럽게 반영되었는가?
+- [ ] 누락된 정보에 대해 합리적 기본값을 적용했는가?
+- [ ] 예시나 체크리스트가 충분한가?
+- [ ] 과장되거나 검증되지 않은 표현은 없는가?
+- [ ] 다음 행동이 명확히 제시되었는가?
+
+## 💬 사용 예시
+
+### 예시 1
+사용자: “${triggers[0]}”
+
+처리 방향: 목적과 대상자를 간단히 확인한 뒤, ${inp.format} 형식에 맞는 초안을 작성합니다.
+
+### 예시 2
+사용자: “${triggers[1]}”
+
+처리 방향: 핵심 작업을 단계별로 나누고, 바로 사용할 수 있는 문장과 체크리스트를 함께 제공합니다.
+
+### 예시 3
+사용자: “${triggers[2]}”
+
+처리 방향: 결과물의 구조를 먼저 제안한 뒤, 사용자가 원하는 톤과 분량에 맞춰 완성합니다.
+
+## ⚠️ 주의사항
+
+- 사용자의 요청이 불명확하면 질문을 길게 늘어놓지 말고 핵심 질문만 합니다.
+- 최신 자료, 통계, 법적 판단이 필요한 내용은 확인 필요 표시를 합니다.
+- 민감정보, 비밀번호, API 키를 요구하거나 저장하지 않습니다.
+- 결과물이 길어질 경우 먼저 요약본을 제시하고, 사용자가 원하면 확장합니다.
+- 사용자가 “더 쉽게”, “더 전문적으로”, “표로”, “PPT용으로”라고 요청하면 같은 내용을 해당 형식으로 재구성합니다.
+
+## 🔁 개선 프롬프트
+
+생성된 스킬을 Claude에서 더 고도화하고 싶다면 아래 문장을 사용하세요.
+
+> 위 SKILL.md를 Claude Skills 공식 형식에 더 맞게 다듬고, 트리거 문장과 품질 체크리스트를 보강해줘. 실제 업무에서 바로 사용할 수 있도록 예시와 예외 처리도 추가해줘.
+`;
 }
 
 function stripFences(text){
@@ -1039,7 +1214,7 @@ SKILL.md의 frontmatter(description)에 나열된 트리거 문장 중 하나를
 
 ---
 DEEPCOMPASS AI LAB · 딥컴퍼스AI연구소 · 문의: emas7788@naver.com · blog.naver.com/emas7788
-© 2026 고연심. Powered by Claude AI (Anthropic).
+© 2026 고연심. Created with DeepCompass AI Lab SKILL COMPASS.
 `;
 }
 
