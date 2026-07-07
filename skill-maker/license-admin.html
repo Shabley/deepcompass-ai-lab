@@ -4,19 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>라이선스 발급 (관리자) — SKILL COMPASS</title>
+<title>관리자 대시보드 — SKILL COMPASS</title>
 <style>
-:root{--bg:#0D1B2E;--card:#13233D;--line:#24395c;--cyan:#00C8E8;--gold:#C9A84C;--text:#E5EAF3;--sub:#94A3B8;--red:#EF4444}
+:root{--bg:#0D1B2E;--card:#13233D;--line:#24395c;--cyan:#00C8E8;--gold:#C9A84C;--text:#E5EAF3;--sub:#94A3B8;--red:#EF4444;--green:#10B981}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Pretendard','Noto Sans KR',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:40px 18px;line-height:1.6}
-.wrap{max-width:560px;margin:0 auto}
+.wrap{max-width:860px;margin:0 auto}
 h1{font-size:22px;margin-bottom:4px;color:var(--cyan)}
+h2{font-size:17px;margin-bottom:14px}
 .sub{color:var(--sub);font-size:13.5px;margin-bottom:24px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:18px}
 label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
 input,select{width:100%;background:#0f1e35;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:12px 14px;font-size:15px;outline:none;font-family:inherit}
 input:focus,select:focus{border-color:var(--cyan)}
 button{font-family:inherit;cursor:pointer}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.grid2{grid-template-columns:1fr}}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 10px;text-align:center}
+.stat .n{font-size:23px;font-weight:800;color:var(--gold)}
+.stat .l{font-size:11.5px;color:var(--sub);margin-top:2px}
+.stat.warn .n{color:#fca5a5}
+
 .gen{width:100%;margin-top:20px;border:none;border-radius:11px;padding:14px;font-size:16px;font-weight:800;background:linear-gradient(90deg,var(--cyan),#1B8BC9);color:#03222c}
 .result{display:none;margin-top:18px;background:#091524;border:1px solid var(--gold);border-radius:12px;padding:18px;text-align:center}
 .result .code{font-family:Consolas,monospace;font-size:21px;font-weight:800;color:var(--gold);letter-spacing:1px;word-break:break-all}
@@ -25,34 +37,76 @@ button{font-family:inherit;cursor:pointer}
 .row button{flex:1;border:1px solid var(--line);background:#0f1e35;color:var(--text);border-radius:9px;padding:10px;font-weight:700;font-size:13.5px}
 .row button:hover{border-color:var(--cyan);color:var(--cyan)}
 .warn{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#fca5a5;margin-top:16px}
-.toast{position:fixed;right:18px;bottom:18px;background:var(--card);border:1px solid var(--cyan);border-left:5px solid var(--cyan);border-radius:10px;padding:12px 18px;font-size:14px;display:none}
+
+/* ledger */
+.ledger-head{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.ledger-head input{flex:1;min-width:180px}
+.csv-btn{border:1px solid rgba(201,168,76,.6);background:transparent;color:var(--gold);border-radius:9px;padding:11px 18px;font-weight:700;font-size:13.5px;white-space:nowrap}
+.csv-btn:hover{background:rgba(201,168,76,.12)}
+.lrow{background:#0f1e35;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+.lrow.expired{opacity:.6}
+.lrow .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.lrow .email{font-weight:700;font-size:14.5px;word-break:break-all}
+.badge{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.5px;white-space:nowrap}
+.badge.ok{background:rgba(16,185,129,.14);color:#6ee7b7;border:1px solid rgba(16,185,129,.4)}
+.badge.soon{background:rgba(201,168,76,.16);color:var(--gold);border:1px solid rgba(201,168,76,.5)}
+.badge.dead{background:rgba(239,68,68,.14);color:#fca5a5;border:1px solid rgba(239,68,68,.4)}
+.lrow .meta{font-size:12.5px;color:var(--sub);margin:5px 0 9px}
+.lrow .code-line{font-family:Consolas,monospace;font-size:12px;color:#7d93b8;word-break:break-all;margin-bottom:9px}
+.lrow .btns{display:flex;gap:6px;flex-wrap:wrap}
+.lbtn{font-size:12px;padding:6px 11px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--sub)}
+.lbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.lbtn.danger:hover{border-color:var(--red);color:var(--red)}
+.empty{text-align:center;color:var(--sub);font-size:13.5px;padding:28px 10px}
+.toast{position:fixed;right:18px;bottom:18px;background:var(--card);border:1px solid var(--cyan);border-left:5px solid var(--cyan);border-radius:10px;padding:12px 18px;font-size:14px;display:none;z-index:50}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>🔑 SKILL COMPASS 라이선스 발급</h1>
-  <p class="sub">관리자 전용 — 입금 확인 후 이 페이지에서 코드를 만들어 구매자에게 이메일로 보내세요.</p>
+  <h1>📊 SKILL COMPASS 관리자 대시보드</h1>
+  <p class="sub">입금 확인 → 코드 발급 → 자동으로 발급 대장에 기록됩니다. 신규 구독 신청은 <b>emas7788@naver.com</b> 메일함에서 확인하세요.</p>
 
+  <!-- 통계 -->
+  <div class="stats">
+    <div class="stat"><div class="n" id="stTotal">0</div><div class="l">총 구독자</div></div>
+    <div class="stat"><div class="n" id="stMonth">0</div><div class="l">이번 달 발급</div></div>
+    <div class="stat"><div class="n" id="stRevenue">0원</div><div class="l">누적 매출</div></div>
+    <div class="stat warn"><div class="n" id="stExpiring">0</div><div class="l">만료 임박 (D-7)</div></div>
+  </div>
+
+  <!-- 발급 -->
   <div class="card">
-    <label>구매자 이메일</label>
-    <input type="email" id="email" placeholder="buyer@example.com">
-
-    <label>플랜 (기간 자동 계산)</label>
-    <select id="plan">
-      <option value="1">BASIC — 1개월 (9,000원)</option>
-      <option value="3">PLUS — 3개월 (24,300원)</option>
-      <option value="6">PRO — 6개월 (43,200원)</option>
-      <option value="12">MASTER — 1년 (75,600원)</option>
-      <option value="custom">직접 만료일 지정</option>
-    </select>
-
-    <label id="dateLabel" style="display:none">만료일 직접 지정</label>
-    <input type="date" id="customDate" style="display:none">
-
+    <h2>🔑 라이선스 코드 발급</h2>
+    <div class="grid2">
+      <div>
+        <label>구매자 이메일</label>
+        <input type="email" id="email" placeholder="buyer@example.com">
+      </div>
+      <div>
+        <label>플랜</label>
+        <select id="plan">
+          <option value="1" data-price="3900">BASIC — 1개월 (3,900원)</option>
+          <option value="3" data-price="9900">PLUS — 3개월 (9,900원)</option>
+          <option value="6" data-price="17900">PRO — 6개월 (17,900원)</option>
+          <option value="12" data-price="29900">MASTER — 1년 (29,900원)</option>
+          <option value="custom" data-price="0">직접 만료일 지정</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <label>금액(원) <span style="color:var(--sub);font-weight:400;font-size:12px">— 매출 통계용, 수정 가능</span></label>
+        <input type="number" id="price" value="3900" min="0" step="100">
+      </div>
+      <div id="dateWrap" style="display:none">
+        <label>만료일 직접 지정</label>
+        <input type="date" id="customDate">
+      </div>
+    </div>
     <label>비밀키 <span style="color:var(--sub);font-weight:400;font-size:12px">(index.html의 LICENSE_SECRET과 동일해야 함)</span></label>
     <input type="text" id="secret" value="DC-COMPASS-2026-EMAS7788">
 
-    <button class="gen" id="genBtn">⚡ 라이선스 코드 생성</button>
+    <button class="gen" id="genBtn">⚡ 코드 생성 + 대장 기록</button>
 
     <div class="result" id="result">
       <div class="code" id="codeOut"></div>
@@ -63,7 +117,17 @@ button{font-family:inherit;cursor:pointer}
       </div>
     </div>
 
-    <div class="warn">⚠ 이 페이지 주소를 구매자에게 알려주지 마세요. 코드는 <b>이메일+만료일+비밀키</b> 조합으로 만들어지므로, 비밀키를 바꾸면 기존 코드는 모두 무효가 됩니다.</div>
+    <div class="warn">⚠ 이 페이지 주소를 구매자에게 알려주지 마세요. 발급 대장은 <b>이 브라우저에만</b> 저장되므로, 주기적으로 [CSV 내보내기]로 백업하세요. 비밀키를 바꾸면 기존 코드는 모두 무효가 됩니다.</div>
+  </div>
+
+  <!-- 발급 대장 -->
+  <div class="card">
+    <h2>📒 발급 대장 (구독자 현황)</h2>
+    <div class="ledger-head">
+      <input type="text" id="search" placeholder="🔍 이메일·플랜 검색">
+      <button class="csv-btn" id="csvBtn">⬇ CSV 내보내기</button>
+    </div>
+    <div id="ledgerList"></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -71,29 +135,129 @@ button{font-family:inherit;cursor:pointer}
 <script>
 "use strict";
 const $ = id => document.getElementById(id);
-let lastCode = "", lastEmail = "", lastExpiry = "";
+const LEDGER_STORE = "dc_skillmaker_admin_ledger";
+const PLAN_LABELS = { "1":"BASIC 1개월", "3":"PLUS 3개월", "6":"PRO 6개월", "12":"MASTER 1년", "custom":"직접지정" };
+let lastIssue = null; // {code, email, expiry}
 
 function toast(msg){
   const t = $("toast"); t.textContent = msg; t.style.display = "block";
   clearTimeout(t._h); t._h = setTimeout(()=>t.style.display="none", 2800);
 }
-$("plan").addEventListener("change", ()=>{
-  const custom = $("plan").value === "custom";
-  $("dateLabel").style.display = custom ? "" : "none";
-  $("customDate").style.display = custom ? "" : "none";
-});
-
-function ymd(d){
-  const p = n => String(n).padStart(2,"0");
-  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`;
-}
+function ymd(d){ const p = n => String(n).padStart(2,"0"); return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`; }
 function pretty(y){ return `${y.slice(0,4)}.${y.slice(4,6)}.${y.slice(6,8)}`; }
+function todayYmd(){ return ymd(new Date()); }
+function dDay(expiry){
+  const t = new Date(); t.setHours(0,0,0,0);
+  const e = new Date(+expiry.slice(0,4), +expiry.slice(4,6)-1, +expiry.slice(6,8));
+  return Math.round((e - t) / 864e5);
+}
 
 async function licSig(email, expiry, secret){
   const data = new TextEncoder().encode(email.trim().toLowerCase() + "|" + expiry + "|" + secret);
   const buf = await crypto.subtle.digest("SHA-256", data);
   return [...new Uint8Array(buf)].slice(0,4).map(b=>b.toString(16).padStart(2,"0")).join("").toUpperCase();
 }
+
+/* ── ledger store ── */
+function ledgerLoad(){
+  try{ return JSON.parse(localStorage.getItem(LEDGER_STORE)) || []; }catch(_){ return []; }
+}
+function ledgerSave(list){
+  try{ localStorage.setItem(LEDGER_STORE, JSON.stringify(list)); }
+  catch(_){ toast("저장 실패: 브라우저 저장 공간을 확인하세요."); }
+}
+
+/* ── stats ── */
+function renderStats(){
+  const list = ledgerLoad();
+  const uniq = new Set(list.map(x=>x.email.toLowerCase()));
+  $("stTotal").textContent = uniq.size;
+
+  const now = new Date();
+  $("stMonth").textContent = list.filter(x=>{
+    const d = new Date(x.issuedAt);
+    return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+  }).length;
+
+  const rev = list.reduce((s,x)=>s+(x.price||0), 0);
+  $("stRevenue").textContent = rev.toLocaleString() + "원";
+
+  // 만료 임박: 이메일별 최신 만료일이 오늘~7일 이내
+  const latest = {};
+  list.forEach(x=>{
+    const k = x.email.toLowerCase();
+    if(!latest[k] || x.expiry > latest[k]) latest[k] = x.expiry;
+  });
+  const expiring = Object.values(latest).filter(e=>{ const d = dDay(e); return d >= 0 && d <= 7; }).length;
+  $("stExpiring").textContent = expiring;
+}
+
+/* ── ledger list ── */
+function renderLedger(){
+  const list = ledgerLoad().slice().sort((a,b)=>b.issuedAt.localeCompare(a.issuedAt));
+  const q = ($("search").value || "").trim().toLowerCase();
+  const filtered = q ? list.filter(x=>
+    x.email.toLowerCase().includes(q) || (x.plan||"").toLowerCase().includes(q)) : list;
+
+  const box = $("ledgerList");
+  box.innerHTML = "";
+  if(!filtered.length){
+    box.innerHTML = `<div class="empty">${list.length ? "검색 결과가 없습니다." : "아직 발급 기록이 없습니다.<br>위에서 코드를 생성하면 자동으로 기록됩니다."}</div>`;
+    return;
+  }
+  filtered.forEach(item=>{
+    const d = dDay(item.expiry);
+    let badge, cls = "";
+    if(d < 0){ badge = `<span class="badge dead">만료</span>`; cls = "expired"; }
+    else if(d <= 7){ badge = `<span class="badge soon">D-${d}</span>`; }
+    else { badge = `<span class="badge ok">유효</span>`; }
+    const issued = new Date(item.issuedAt);
+    const p = n => String(n).padStart(2,"0");
+    const el = document.createElement("div");
+    el.className = "lrow " + cls;
+    el.innerHTML = `
+      <div class="top"><span class="email">${item.email.replace(/</g,"&lt;")}</span>${badge}</div>
+      <div class="meta">${item.plan} · ${(item.price||0).toLocaleString()}원 · 발급 ${issued.getFullYear()}.${p(issued.getMonth()+1)}.${p(issued.getDate())} · 만료 ${pretty(item.expiry)}</div>
+      <div class="code-line">${item.code}</div>
+      <div class="btns">
+        <button class="lbtn" data-act="reissue">↺ 재발급</button>
+        <button class="lbtn" data-act="mail">📧 메일</button>
+        <button class="lbtn" data-act="copy">📋 코드 복사</button>
+        <button class="lbtn danger" data-act="del">🗑 삭제</button>
+      </div>`;
+    el.querySelector('[data-act="reissue"]').addEventListener("click", ()=>{
+      $("email").value = item.email;
+      window.scrollTo({ top:0, behavior:"smooth" });
+      toast("이메일이 입력되었습니다. 플랜을 고르고 [코드 생성]을 누르세요.");
+    });
+    el.querySelector('[data-act="mail"]').addEventListener("click", ()=>composeMail(item.email, item.code, item.expiry));
+    el.querySelector('[data-act="copy"]').addEventListener("click", async ()=>{
+      try{ await navigator.clipboard.writeText(item.code); }catch(_){ fallbackCopy(item.code); }
+      toast("코드가 복사되었습니다.");
+    });
+    el.querySelector('[data-act="del"]').addEventListener("click", ()=>{
+      if(!confirm(`${item.email} 의 발급 기록을 삭제할까요?\n(코드 자체는 만료일까지 계속 유효합니다)`)) return;
+      ledgerSave(ledgerLoad().filter(x=>x.id !== item.id));
+      renderAll();
+      toast("기록이 삭제되었습니다.");
+    });
+    box.appendChild(el);
+  });
+}
+function renderAll(){ renderStats(); renderLedger(); }
+
+function fallbackCopy(txt){
+  const ta = document.createElement("textarea");
+  ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+}
+
+/* ── issue ── */
+$("plan").addEventListener("change", ()=>{
+  const custom = $("plan").value === "custom";
+  $("dateWrap").style.display = custom ? "" : "none";
+  const opt = $("plan").selectedOptions[0];
+  $("price").value = opt ? (opt.dataset.price || 0) : 0;
+});
 
 $("genBtn").addEventListener("click", async ()=>{
   const email = $("email").value.trim();
@@ -112,37 +276,82 @@ $("genBtn").addEventListener("click", async ()=>{
   }
 
   const sig = await licSig(email, expiry, secret);
-  lastCode = `DC-${expiry}-${sig}`;
-  lastEmail = email; lastExpiry = expiry;
-  $("codeOut").textContent = lastCode;
+  const code = `DC-${expiry}-${sig}`;
+  lastIssue = { code, email, expiry };
+
+  $("codeOut").textContent = code;
   $("metaOut").textContent = `${email} · ${pretty(expiry)}까지 유효`;
   $("result").style.display = "block";
+
+  // 발급 대장 자동 기록
+  const list = ledgerLoad();
+  list.push({
+    id: "lg_" + Date.now() + "_" + Math.random().toString(36).slice(2,7),
+    email,
+    plan: PLAN_LABELS[$("plan").value] || "직접지정",
+    price: parseInt($("price").value, 10) || 0,
+    code, expiry,
+    issuedAt: new Date().toISOString()
+  });
+  ledgerSave(list);
+  renderAll();
+  toast("✅ 코드가 생성되고 대장에 기록되었습니다.");
 });
 
 $("copyBtn").addEventListener("click", async ()=>{
-  try{ await navigator.clipboard.writeText(lastCode); }
-  catch(_){ const ta=document.createElement("textarea"); ta.value=lastCode; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
+  if(!lastIssue) return;
+  try{ await navigator.clipboard.writeText(lastIssue.code); }catch(_){ fallbackCopy(lastIssue.code); }
   toast("코드가 복사되었습니다.");
 });
-
 $("mailBtn").addEventListener("click", ()=>{
+  if(!lastIssue) return;
+  composeMail(lastIssue.email, lastIssue.code, lastIssue.expiry);
+});
+
+function composeMail(email, code, expiry){
   const subject = "[SKILL COMPASS] 라이선스 코드 안내";
   const body =
 `안녕하세요, 딥컴퍼스AI연구소입니다.
 SKILL COMPASS 구독이 확인되어 라이선스 코드를 보내드립니다.
 
-■ 라이선스 코드: ${lastCode}
-■ 유효 기간: ${pretty(lastExpiry)}까지
+■ 라이선스 코드: ${code}
+■ 유효 기간: ${pretty(expiry)}까지
 
 [활성화 방법]
 1. https://shabley.github.io/deepcompass-ai-lab/skill-maker/ 접속
 2. [💳 구독/결제] 탭 → 하단 "라이선스 코드 활성화"
-3. 이메일(${lastEmail})과 위 코드를 입력 후 [활성화]
+3. 이메일(${email})과 위 코드를 입력 후 [활성화]
 
 이용해 주셔서 감사합니다.
 딥컴퍼스AI연구소 드림`;
-  location.href = `mailto:${lastEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+/* ── CSV export ── */
+$("csvBtn").addEventListener("click", ()=>{
+  const list = ledgerLoad();
+  if(!list.length){ toast("내보낼 기록이 없습니다."); return; }
+  const esc = v => `"${String(v).replace(/"/g,'""')}"`;
+  const rows = [["이메일","플랜","금액(원)","발급일","만료일","라이선스 코드"].map(esc).join(",")];
+  list.slice().sort((a,b)=>a.issuedAt.localeCompare(b.issuedAt)).forEach(x=>{
+    const d = new Date(x.issuedAt);
+    const p = n => String(n).padStart(2,"0");
+    rows.push([x.email, x.plan, x.price||0,
+      `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`,
+      `${x.expiry.slice(0,4)}-${x.expiry.slice(4,6)}-${x.expiry.slice(6,8)}`,
+      x.code].map(esc).join(","));
+  });
+  const blob = new Blob(["﻿" + rows.join("\r\n")], { type:"text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "skill-compass-구독자대장.csv";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 800);
+  toast(`⬇ ${list.length}건을 CSV로 내보냈습니다.`);
 });
+
+$("search").addEventListener("input", renderLedger);
+renderAll();
 </script>
 </body>
 </html>
