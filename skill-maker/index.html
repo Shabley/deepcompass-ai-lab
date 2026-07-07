@@ -307,6 +307,34 @@ table.cmp td{color:var(--sub)}
 .lic-btn{background:linear-gradient(90deg,var(--cyan),var(--blue));border:none;border-radius:10px;color:#03222c;font-weight:800;padding:12px 26px;font-size:15px}
 .lic-btn:hover{filter:brightness(1.08)}
 
+/* trial banner */
+.trial-banner{
+  display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
+  background:linear-gradient(90deg,rgba(201,168,76,.16),rgba(0,200,232,.12));
+  border:1px solid rgba(201,168,76,.55);border-radius:12px;padding:12px 18px;margin-bottom:20px;font-size:14px;
+}
+.tb-btn{background:linear-gradient(90deg,var(--gold),#a9853a);border:none;border-radius:9px;color:#1a1406;font-weight:800;padding:8px 16px;font-size:13px}
+.tb-btn:hover{filter:brightness(1.1)}
+
+/* paywall modal */
+.paywall-overlay{
+  position:fixed;inset:0;background:rgba(4,10,20,.7);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;z-index:100;padding:18px;
+}
+.paywall-overlay.open{opacity:1;pointer-events:auto}
+.paywall{
+  background:linear-gradient(160deg,#1a2440,#13233D);border:1px solid rgba(201,168,76,.5);
+  border-radius:18px;padding:34px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+.paywall .pw-icon{font-size:40px}
+.paywall h3{font-size:20px;margin:10px 0 8px}
+.paywall p{color:var(--sub);font-size:14px;margin-bottom:16px}
+.pw-plans{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.pw-plans span{background:#0f1e35;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;color:var(--sub)}
+.pw-plans b{color:var(--gold)}
+.pw-close{display:block;margin:12px auto 0;background:none;border:none;color:var(--sub);font-size:13px;text-decoration:underline}
+.pw-close:hover{color:var(--text)}
+
 footer{border-top:1px solid var(--line);margin-top:44px;padding:30px 0 40px;text-align:center;color:var(--sub);font-size:13px}
 footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px;margin-bottom:6px}
 </style>
@@ -332,6 +360,11 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
 </nav>
 
 <main class="wrap">
+
+<div class="trial-banner" id="trialBanner" style="display:none">
+  <span class="tb-msg"></span>
+  <button class="tb-btn" id="trialBannerBtn">구독하러 가기 →</button>
+</div>
 
 <!-- ══════════ TAB 1 : MAKER ══════════ -->
 <section id="tab-maker" class="tab-panel active">
@@ -646,6 +679,18 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
   </div>
 </aside>
 
+<!-- paywall modal -->
+<div class="paywall-overlay" id="paywallOverlay" role="dialog" aria-modal="true" aria-label="구독 안내">
+  <div class="paywall">
+    <div class="pw-icon">⏰</div>
+    <h3>무료체험이 종료되었습니다</h3>
+    <p>SKILL COMPASS가 도움이 되셨나요?<br>부담 없는 가격으로 계속 이용해 보세요.</p>
+    <div class="pw-plans" id="pwPlans"></div>
+    <button class="cta" id="paywallGoBtn" style="font-size:16px;padding:14px">💳 요금제 보러 가기</button>
+    <button class="pw-close" id="paywallCloseBtn">나중에 할게요</button>
+  </div>
+</div>
+
 <div id="toasts"></div>
 
 <footer>
@@ -900,8 +945,15 @@ async function startGenerate(){
   if(!ent.ok){
     document.querySelector('.tab-btn[data-tab="pricing"]').click();
     renderSubStatus();
-    toast(`무료체험(${TRIAL_DAYS}일)이 종료되었습니다. 구독 후 라이선스 코드를 활성화해 주세요.`, true);
+    showPaywall();
     return;
+  }
+  if(ent.type === "fresh"){
+    // 첫 생성 클릭 시점부터 무료체험 시작
+    trialStart();
+    renderSubStatus();
+    updateTrialBanner();
+    toast(`🎁 오늘부터 ${TRIAL_DAYS}일 무료체험이 시작되었습니다!`);
   }
 
   // validate required
@@ -1571,8 +1623,11 @@ async function verifyLicense(email, code){
 function getStoredLicense(){
   try{ return JSON.parse(localStorage.getItem(LIC_STORE)) || null; }catch(_){ return null; }
 }
+function getTrialStartRaw(){
+  return parseInt(localStorage.getItem(TRIAL_STORE) || "0", 10) || 0;
+}
 function trialStart(){
-  let s = parseInt(localStorage.getItem(TRIAL_STORE) || "0", 10);
+  let s = getTrialStartRaw();
   if(!s){ s = Date.now(); localStorage.setItem(TRIAL_STORE, String(s)); }
   return s;
 }
@@ -1582,7 +1637,8 @@ async function getEntitlement(){
     const v = await verifyLicense(lic.email, lic.code);
     if(v.valid) return { ok:true, type:"license", expiry:v.expiry };
   }
-  const s = trialStart();
+  const s = getTrialStartRaw();
+  if(!s) return { ok:true, type:"fresh" }; // 체험 미시작 — 첫 생성 클릭 시 시작
   const daysUsed = (Date.now() - s) / 864e5;
   if(daysUsed <= TRIAL_DAYS) return { ok:true, type:"trial", left: Math.max(1, Math.ceil(TRIAL_DAYS - daysUsed)) };
   return { ok:false };
@@ -1594,6 +1650,8 @@ async function renderSubStatus(){
   const ent = await getEntitlement();
   if(ent.ok && ent.type === "license"){
     box.innerHTML = `<span class="pill active">구독중</span><span>라이선스가 활성화되어 있습니다 · <b>${ymdPretty(ent.expiry)}</b>까지 이용 가능</span>`;
+  }else if(ent.ok && ent.type === "fresh"){
+    box.innerHTML = `<span class="pill trial">체험 전</span><span>아직 무료체험이 시작되지 않았습니다. <b>첫 생성 버튼 클릭 시</b> ${TRIAL_DAYS}일 무료체험이 자동 시작됩니다.</span>`;
   }else if(ent.ok && ent.type === "trial"){
     box.innerHTML = `<span class="pill trial">무료체험</span><span>무료체험 이용 중 — 남은 기간 <b style="color:var(--cyan)">D-${ent.left}</b>. 만료 후에는 구독이 필요합니다.</span>`;
   }else{
@@ -1623,6 +1681,7 @@ async function renderSubStatus(){
       if(p.price === 0){
         trialStart();
         renderSubStatus();
+        updateTrialBanner();
         document.querySelector('.tab-btn[data-tab="maker"]').click();
         toast(`🎁 ${TRIAL_DAYS}일 무료체험이 시작되었습니다!`);
         return;
@@ -1684,14 +1743,56 @@ $("licActivateBtn") && $("licActivateBtn").addEventListener("click", async ()=>{
   if(!v.valid){ toast(v.why, true); return; }
   localStorage.setItem(LIC_STORE, JSON.stringify({ email, code, expiry: v.expiry }));
   renderSubStatus();
+  updateTrialBanner();
+  hidePaywall();
   toast(`✅ 구독이 활성화되었습니다! ${ymdPretty(v.expiry)}까지 이용 가능합니다.`);
 });
 
+/* trial banner (D-2부터 표시) */
+async function updateTrialBanner(){
+  const b = $("trialBanner");
+  if(!b) return;
+  const ent = await getEntitlement();
+  if(ent.ok && ent.type === "trial" && ent.left <= 2){
+    b.querySelector(".tb-msg").innerHTML = `⏳ 무료체험이 <b style="color:var(--gold)">D-${ent.left}</b> 후 종료됩니다. 지금 구독하면 끊김 없이 이용할 수 있어요.`;
+    b.style.display = "";
+  }else{
+    b.style.display = "none";
+  }
+}
+$("trialBannerBtn").addEventListener("click", ()=>{
+  document.querySelector('.tab-btn[data-tab="pricing"]').click();
+});
+
+/* paywall modal */
+function showPaywall(){ $("paywallOverlay").classList.add("open"); }
+function hidePaywall(){ $("paywallOverlay").classList.remove("open"); }
+$("paywallGoBtn").addEventListener("click", ()=>{
+  hidePaywall();
+  document.querySelector('.tab-btn[data-tab="pricing"]').click();
+});
+$("paywallCloseBtn").addEventListener("click", hidePaywall);
+$("paywallOverlay").addEventListener("click", e=>{ if(e.target === $("paywallOverlay")) hidePaywall(); });
+(function initPwPlans(){
+  const pB = PLANS.find(p=>p.id==="BASIC"), pM = PLANS.find(p=>p.id==="MASTER");
+  $("pwPlans").innerHTML =
+    `<span>1개월 <b>${pB.price.toLocaleString()}원</b></span>` +
+    `<span>1년 <b>${pM.price.toLocaleString()}원</b> · 월 ${(Math.round(pM.price/12/100)*100).toLocaleString()}원꼴</span>`;
+})();
+
 document.querySelector('.tab-btn[data-tab="pricing"]').addEventListener("click", renderSubStatus);
 renderSubStatus();
+updateTrialBanner();
+(async ()=>{ // 만료 상태로 접속하면 세션당 1회 결제 안내 모달 표시
+  const ent = await getEntitlement();
+  if(!ent.ok && !sessionStorage.getItem("dc_paywall_shown")){
+    sessionStorage.setItem("dc_paywall_shown", "1");
+    showPaywall();
+  }
+})();
 
-/* esc key closes vault */
-document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeVault(); });
+/* esc key closes vault & paywall */
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeVault(); hidePaywall(); } });
 </script>
 </body>
 </html>
