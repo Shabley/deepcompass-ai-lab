@@ -257,6 +257,56 @@ table.cmp td{color:var(--sub)}
 .toast.error{border-color:var(--red);border-left-color:var(--red)}
 @keyframes toastin{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
 
+/* ===== pricing ===== */
+.sub-status{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  background:#0f1e35;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:14px;
+}
+.sub-status .pill{padding:4px 12px;border-radius:999px;font-size:12.5px;font-weight:800;letter-spacing:1px}
+.sub-status .pill.trial{background:rgba(0,200,232,.14);color:var(--cyan);border:1px solid rgba(0,200,232,.4)}
+.sub-status .pill.active{background:rgba(16,185,129,.14);color:#6ee7b7;border:1px solid rgba(16,185,129,.4)}
+.sub-status .pill.expired{background:rgba(239,68,68,.14);color:#fca5a5;border:1px solid rgba(239,68,68,.4)}
+.price-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:960px){.price-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.price-grid{grid-template-columns:1fr 1fr}}
+.pcard{
+  background:#0f1e35;border:1px solid var(--line);border-radius:14px;padding:20px 14px;text-align:center;
+  display:flex;flex-direction:column;gap:6px;position:relative;transition:transform .15s,border-color .2s;
+}
+.pcard:hover{transform:translateY(-3px);border-color:var(--cyan)}
+.pcard .tier{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--cyan)}
+.pcard .pname{font-size:14.5px;font-weight:700}
+.pcard .orig{font-size:12.5px;color:var(--sub);text-decoration:line-through;min-height:18px}
+.pcard .price{font-size:20px;font-weight:800;color:var(--gold)}
+.pcard .price small{font-size:12px;color:var(--sub);font-weight:400}
+.pcard .disc{font-size:11.5px;color:#6ee7b7;font-weight:700;min-height:16px}
+.pcard .pbtn{
+  margin-top:auto;border:1px solid var(--line);background:transparent;color:var(--text);
+  border-radius:9px;padding:9px 6px;font-size:13px;font-weight:700;transition:all .2s;
+}
+.pcard .pbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.pcard.best{border:1.5px solid var(--gold);box-shadow:0 0 22px rgba(201,168,76,.15)}
+.pcard.best .pbtn{background:linear-gradient(90deg,var(--gold),#a9853a);color:#1a1406;border:none}
+.best-badge{
+  position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(90deg,var(--gold),#a9853a);color:#1a1406;font-size:10.5px;font-weight:800;
+  letter-spacing:1.5px;border-radius:999px;padding:3px 12px;
+}
+.bank-box{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.45);border-radius:12px;padding:16px 18px;margin:6px 0 16px;
+}
+.bank-box .acct{font-size:16.5px;font-weight:800;color:var(--gold);letter-spacing:.5px}
+.copy-acct{background:transparent;border:1px solid rgba(201,168,76,.6);color:var(--gold);border-radius:9px;padding:8px 16px;font-weight:700;font-size:13px}
+.copy-acct:hover{background:rgba(201,168,76,.15)}
+.flow-steps{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 18px}
+.flow-steps span{background:#0f1e35;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:12.5px;color:var(--sub)}
+.flow-steps b{color:var(--cyan)}
+.lic-row{display:flex;gap:10px;flex-wrap:wrap}
+.lic-row input{flex:1;min-width:200px}
+.lic-btn{background:linear-gradient(90deg,var(--cyan),var(--blue));border:none;border-radius:10px;color:#03222c;font-weight:800;padding:12px 26px;font-size:15px}
+.lic-btn:hover{filter:brightness(1.08)}
+
 footer{border-top:1px solid var(--line);margin-top:44px;padding:30px 0 40px;text-align:center;color:var(--sub);font-size:13px}
 footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px;margin-bottom:6px}
 </style>
@@ -277,6 +327,7 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
   <button class="tab-btn" data-tab="howto">📖 사용 가이드</button>
   <button class="tab-btn" data-tab="what">📘 SKILL이란?</button>
   <button class="tab-btn" data-tab="apikey">🚀 활용 가이드</button>
+  <button class="tab-btn" data-tab="pricing">💳 구독/결제</button>
   <button class="vault-btn" id="openVault">📚 내 스킬 보관함</button>
 </nav>
 
@@ -513,6 +564,66 @@ footer .fb{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:13.5px
   </div>
 </section>
 
+<!-- ══════════ TAB 5 : PRICING / PAYMENT ══════════ -->
+<section id="tab-pricing" class="tab-panel">
+  <div class="card">
+    <h2>💳 구독 요금제</h2>
+    <p class="desc">1주 무료체험 후, 계좌이체로 간편하게 구독할 수 있습니다. 장기 구독일수록 할인율이 커집니다.</p>
+
+    <div class="sub-status" id="subStatus"></div>
+
+    <div class="price-grid" id="priceGrid"></div>
+  </div>
+
+  <div class="card">
+    <h2>🏦 결제 방법 — 계좌이체</h2>
+    <div class="flow-steps">
+      <span><b>①</b> 플랜 선택</span><span><b>②</b> 아래 계좌로 이체</span><span><b>③</b> 신청 폼 작성·메일 발송</span><span><b>④</b> 1~2영업일 내 라이선스 코드 수신</span><span><b>⑤</b> 코드 입력 → 이용 시작</span>
+    </div>
+    <div class="bank-box">
+      <div>
+        <div style="font-size:12.5px;color:var(--sub)">입금 계좌</div>
+        <div class="acct" id="bankAcct"></div>
+      </div>
+      <button class="copy-acct" id="copyAcctBtn">📋 계좌번호 복사</button>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label>💼 선택한 플랜</label>
+        <select id="payPlan"></select>
+      </div>
+      <div class="field">
+        <label>👤 입금자명 <span class="req">*</span></label>
+        <input type="text" id="payName" placeholder="이체 시 표시되는 이름">
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label>📱 연락처 <span class="req">*</span></label>
+        <input type="text" id="payPhone" placeholder="010-0000-0000">
+      </div>
+      <div class="field">
+        <label>✉️ 이메일 <span class="req">*</span> <span class="opt">(라이선스 코드를 받을 주소)</span></label>
+        <input type="email" id="payEmail" placeholder="you@example.com">
+      </div>
+    </div>
+    <button class="cta" id="payApplyBtn" style="font-size:16px;padding:15px">📧 구독 신청 메일 보내기</button>
+    <p class="key-note" style="margin-top:12px">입금 확인 후 <b>1~2영업일 이내</b> 입력하신 이메일로 라이선스 코드가 발송됩니다. 문의: <a href="mailto:emas7788@naver.com">emas7788@naver.com</a></p>
+  </div>
+
+  <div class="card">
+    <h2>🔓 라이선스 코드 활성화</h2>
+    <p class="desc">이메일로 받은 라이선스 코드를 입력하면 구독이 활성화됩니다.</p>
+    <div class="lic-row">
+      <input type="email" id="licEmail" placeholder="구매 시 입력한 이메일">
+      <input type="text" id="licCode" placeholder="DC-20260807-XXXXXXXX">
+      <button class="lic-btn" id="licActivateBtn">✅ 활성화</button>
+    </div>
+    <div class="tip-box">💡 라이선스는 이 브라우저에 저장됩니다. 다른 기기에서 쓰려면 같은 이메일·코드로 다시 활성화하면 됩니다. 코드를 분실했다면 구매 이메일로 문의해 주세요.</div>
+  </div>
+</section>
+
 </main>
 
 <!-- ══════════ VAULT PANEL ══════════ -->
@@ -553,6 +664,22 @@ const MODEL = "claude-sonnet-4-6";
 const MAX_TOKENS = 8000;
 const KEY_STORE = "dc_skillmaker_key";
 const VAULT_STORE = "dc_skillmaker_vault";
+const TRIAL_STORE = "dc_skillmaker_trial";
+const LIC_STORE = "dc_skillmaker_license";
+const TRIAL_DAYS = 7;
+
+/* ▼▼ 운영 설정 — 실제 값으로 수정하세요 ▼▼ */
+const CONTACT_EMAIL = "emas7788@naver.com";
+const BANK_INFO = { bank:"기업은행", number:"000-000000-00-000", holder:"고연심(딥컴퍼스AI연구소)" }; // ← 실제 입금 계좌로 교체
+const LICENSE_SECRET = "DC-COMPASS-2026-EMAS7788"; // license-admin.html의 비밀키와 반드시 동일해야 함
+const PLANS = [
+  { id:"FREE",   name:"1주 무료체험", months:0,  orig:0,      price:0,     disc:"" },
+  { id:"BASIC",  name:"1개월 구독",   months:1,  orig:0,      price:9000,  disc:"" },
+  { id:"PLUS",   name:"3개월 구독",   months:3,  orig:27000,  price:24300, disc:"10% 할인" },
+  { id:"PRO",    name:"6개월 구독",   months:6,  orig:54000,  price:43200, disc:"20% 할인" },
+  { id:"MASTER", name:"1년 구독",     months:12, orig:108000, price:75600, disc:"30% 할인", best:true }
+];
+/* ▲▲ 운영 설정 끝 ▲▲ */
 
 const SYSTEM_PROMPT = `당신은 Claude Agent Skills 설계 전문가입니다. 사용자가 제공한 정보를 바탕으로
 즉시 사용 가능한 전문가급 SKILL.md 파일을 한국어로 작성합니다.
@@ -767,6 +894,15 @@ function collectInputs(){
 async function startGenerate(){
   if(isGenerating) return;
   $("retryBox").style.display = "none";
+
+  // subscription gate: valid license or active free trial required
+  const ent = await getEntitlement();
+  if(!ent.ok){
+    document.querySelector('.tab-btn[data-tab="pricing"]').click();
+    renderSubStatus();
+    toast(`무료체험(${TRIAL_DAYS}일)이 종료되었습니다. 구독 후 라이선스 코드를 활성화해 주세요.`, true);
+    return;
+  }
 
   // validate required
   const inp = collectInputs();
@@ -1409,6 +1545,150 @@ $("exportAllBtn").addEventListener("click", ()=>{
   download("deepcompass-skills-backup.md", doc);
   toast(`⬇ 스킬 ${list.length}개를 하나의 .md로 내보냈습니다.`);
 });
+
+/* ════════════════════════ subscription / license ════════════════════════ */
+function todayYmd(){
+  const d = new Date(); const p = n => String(n).padStart(2,"0");
+  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`;
+}
+function ymdPretty(y){ return `${y.slice(0,4)}.${y.slice(4,6)}.${y.slice(6,8)}`; }
+
+async function licSig(email, expiry){
+  const data = new TextEncoder().encode(email.trim().toLowerCase() + "|" + expiry + "|" + LICENSE_SECRET);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(buf)].slice(0,4).map(b=>b.toString(16).padStart(2,"0")).join("").toUpperCase();
+}
+async function verifyLicense(email, code){
+  if(!email || !email.includes("@")) return { valid:false, why:"이메일을 입력해 주세요." };
+  const m = (code||"").trim().toUpperCase().match(/^DC-(\d{8})-([0-9A-F]{8})$/);
+  if(!m) return { valid:false, why:"코드 형식이 올바르지 않습니다. (예: DC-20260807-1A2B3C4D)" };
+  const expiry = m[1], sig = m[2];
+  if(!(window.crypto && crypto.subtle)) return { valid:false, why:"이 브라우저에서는 라이선스 검증을 지원하지 않습니다." };
+  if(await licSig(email, expiry) !== sig) return { valid:false, why:"코드가 이메일과 일치하지 않습니다. 구매 시 입력한 이메일인지 확인해 주세요." };
+  if(expiry < todayYmd()) return { valid:false, why:`이 코드는 ${ymdPretty(expiry)}에 만료되었습니다.` };
+  return { valid:true, expiry };
+}
+function getStoredLicense(){
+  try{ return JSON.parse(localStorage.getItem(LIC_STORE)) || null; }catch(_){ return null; }
+}
+function trialStart(){
+  let s = parseInt(localStorage.getItem(TRIAL_STORE) || "0", 10);
+  if(!s){ s = Date.now(); localStorage.setItem(TRIAL_STORE, String(s)); }
+  return s;
+}
+async function getEntitlement(){
+  const lic = getStoredLicense();
+  if(lic && lic.email && lic.code){
+    const v = await verifyLicense(lic.email, lic.code);
+    if(v.valid) return { ok:true, type:"license", expiry:v.expiry };
+  }
+  const s = trialStart();
+  const daysUsed = (Date.now() - s) / 864e5;
+  if(daysUsed <= TRIAL_DAYS) return { ok:true, type:"trial", left: Math.max(1, Math.ceil(TRIAL_DAYS - daysUsed)) };
+  return { ok:false };
+}
+
+async function renderSubStatus(){
+  const box = $("subStatus");
+  if(!box) return;
+  const ent = await getEntitlement();
+  if(ent.ok && ent.type === "license"){
+    box.innerHTML = `<span class="pill active">구독중</span><span>라이선스가 활성화되어 있습니다 · <b>${ymdPretty(ent.expiry)}</b>까지 이용 가능</span>`;
+  }else if(ent.ok && ent.type === "trial"){
+    box.innerHTML = `<span class="pill trial">무료체험</span><span>무료체험 이용 중 — 남은 기간 <b style="color:var(--cyan)">D-${ent.left}</b>. 만료 후에는 구독이 필요합니다.</span>`;
+  }else{
+    box.innerHTML = `<span class="pill expired">만료</span><span>무료체험(${TRIAL_DAYS}일)이 종료되었습니다. 아래에서 구독을 신청하고 라이선스 코드를 활성화해 주세요.</span>`;
+  }
+}
+
+/* pricing cards */
+(function initPricing(){
+  const grid = $("priceGrid"); const sel = $("payPlan");
+  if(!grid) return;
+  PLANS.forEach(p=>{
+    const el = document.createElement("div");
+    el.className = "pcard" + (p.best ? " best" : "");
+    const priceHtml = p.price === 0
+      ? `<div class="price">무료</div>`
+      : `<div class="price">${p.price.toLocaleString()}<small>원</small></div>`;
+    el.innerHTML = `
+      ${p.best ? '<div class="best-badge">BEST</div>' : ""}
+      <div class="tier">${p.id}</div>
+      <div class="pname">${p.name}</div>
+      <div class="orig">${p.orig ? p.orig.toLocaleString() + "원" : ""}</div>
+      ${priceHtml}
+      <div class="disc">${p.disc || ""}</div>
+      <button class="pbtn">${p.price === 0 ? "체험 시작" : "이 플랜 신청"}</button>`;
+    el.querySelector(".pbtn").addEventListener("click", ()=>{
+      if(p.price === 0){
+        trialStart();
+        renderSubStatus();
+        document.querySelector('.tab-btn[data-tab="maker"]').click();
+        toast(`🎁 ${TRIAL_DAYS}일 무료체험이 시작되었습니다!`);
+        return;
+      }
+      sel.value = p.id;
+      $("payName").focus();
+      $("payName").scrollIntoView({ behavior:"smooth", block:"center" });
+    });
+    grid.appendChild(el);
+    if(p.price > 0){
+      const opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = `${p.id} — ${p.name} (${p.price.toLocaleString()}원)`;
+      sel.appendChild(opt);
+    }
+  });
+  $("bankAcct").textContent = `${BANK_INFO.bank} ${BANK_INFO.number} (예금주: ${BANK_INFO.holder})`;
+})();
+
+$("copyAcctBtn") && $("copyAcctBtn").addEventListener("click", async ()=>{
+  const txt = `${BANK_INFO.bank} ${BANK_INFO.number}`;
+  try{ await navigator.clipboard.writeText(txt); }
+  catch(_){
+    const ta = document.createElement("textarea");
+    ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+  }
+  toast("📋 계좌번호가 복사되었습니다.");
+});
+
+$("payApplyBtn") && $("payApplyBtn").addEventListener("click", ()=>{
+  const plan = PLANS.find(p=>p.id === $("payPlan").value) || PLANS[1];
+  const name = $("payName").value.trim();
+  const phone = $("payPhone").value.trim();
+  const email = $("payEmail").value.trim();
+  if(!name || !phone || !email){
+    toast("입금자명·연락처·이메일을 모두 입력해 주세요.", true);
+    return;
+  }
+  const subject = `[SKILL COMPASS 구독 신청] ${plan.id} ${plan.name} — ${name}`;
+  const body =
+`SKILL COMPASS 구독을 신청합니다.
+
+■ 플랜: ${plan.id} — ${plan.name} (${plan.price.toLocaleString()}원)
+■ 입금자명: ${name}
+■ 연락처: ${phone}
+■ 라이선스 수신 이메일: ${email}
+■ 입금 계좌: ${BANK_INFO.bank} ${BANK_INFO.number}
+
+입금 완료 후 이 메일을 보내주세요.
+입금 확인 후 1~2영업일 이내에 라이선스 코드를 보내드립니다.`;
+  location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  toast("📧 메일 앱이 열립니다. 내용 확인 후 전송해 주세요.");
+});
+
+$("licActivateBtn") && $("licActivateBtn").addEventListener("click", async ()=>{
+  const email = $("licEmail").value.trim();
+  const code = $("licCode").value.trim();
+  const v = await verifyLicense(email, code);
+  if(!v.valid){ toast(v.why, true); return; }
+  localStorage.setItem(LIC_STORE, JSON.stringify({ email, code, expiry: v.expiry }));
+  renderSubStatus();
+  toast(`✅ 구독이 활성화되었습니다! ${ymdPretty(v.expiry)}까지 이용 가능합니다.`);
+});
+
+document.querySelector('.tab-btn[data-tab="pricing"]').addEventListener("click", renderSubStatus);
+renderSubStatus();
 
 /* esc key closes vault */
 document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeVault(); });

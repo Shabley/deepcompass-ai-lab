@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>라이선스 발급 (관리자) — SKILL COMPASS</title>
+<style>
+:root{--bg:#0D1B2E;--card:#13233D;--line:#24395c;--cyan:#00C8E8;--gold:#C9A84C;--text:#E5EAF3;--sub:#94A3B8;--red:#EF4444}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Pretendard','Noto Sans KR',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:40px 18px;line-height:1.6}
+.wrap{max-width:560px;margin:0 auto}
+h1{font-size:22px;margin-bottom:4px;color:var(--cyan)}
+.sub{color:var(--sub);font-size:13.5px;margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:18px}
+label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+input,select{width:100%;background:#0f1e35;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:12px 14px;font-size:15px;outline:none;font-family:inherit}
+input:focus,select:focus{border-color:var(--cyan)}
+button{font-family:inherit;cursor:pointer}
+.gen{width:100%;margin-top:20px;border:none;border-radius:11px;padding:14px;font-size:16px;font-weight:800;background:linear-gradient(90deg,var(--cyan),#1B8BC9);color:#03222c}
+.result{display:none;margin-top:18px;background:#091524;border:1px solid var(--gold);border-radius:12px;padding:18px;text-align:center}
+.result .code{font-family:Consolas,monospace;font-size:21px;font-weight:800;color:var(--gold);letter-spacing:1px;word-break:break-all}
+.result .meta{font-size:12.5px;color:var(--sub);margin-top:6px}
+.row{display:flex;gap:8px;margin-top:14px}
+.row button{flex:1;border:1px solid var(--line);background:#0f1e35;color:var(--text);border-radius:9px;padding:10px;font-weight:700;font-size:13.5px}
+.row button:hover{border-color:var(--cyan);color:var(--cyan)}
+.warn{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#fca5a5;margin-top:16px}
+.toast{position:fixed;right:18px;bottom:18px;background:var(--card);border:1px solid var(--cyan);border-left:5px solid var(--cyan);border-radius:10px;padding:12px 18px;font-size:14px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🔑 SKILL COMPASS 라이선스 발급</h1>
+  <p class="sub">관리자 전용 — 입금 확인 후 이 페이지에서 코드를 만들어 구매자에게 이메일로 보내세요.</p>
+
+  <div class="card">
+    <label>구매자 이메일</label>
+    <input type="email" id="email" placeholder="buyer@example.com">
+
+    <label>플랜 (기간 자동 계산)</label>
+    <select id="plan">
+      <option value="1">BASIC — 1개월 (9,000원)</option>
+      <option value="3">PLUS — 3개월 (24,300원)</option>
+      <option value="6">PRO — 6개월 (43,200원)</option>
+      <option value="12">MASTER — 1년 (75,600원)</option>
+      <option value="custom">직접 만료일 지정</option>
+    </select>
+
+    <label id="dateLabel" style="display:none">만료일 직접 지정</label>
+    <input type="date" id="customDate" style="display:none">
+
+    <label>비밀키 <span style="color:var(--sub);font-weight:400;font-size:12px">(index.html의 LICENSE_SECRET과 동일해야 함)</span></label>
+    <input type="text" id="secret" value="DC-COMPASS-2026-EMAS7788">
+
+    <button class="gen" id="genBtn">⚡ 라이선스 코드 생성</button>
+
+    <div class="result" id="result">
+      <div class="code" id="codeOut"></div>
+      <div class="meta" id="metaOut"></div>
+      <div class="row">
+        <button id="copyBtn">📋 코드 복사</button>
+        <button id="mailBtn">📧 구매자에게 메일 작성</button>
+      </div>
+    </div>
+
+    <div class="warn">⚠ 이 페이지 주소를 구매자에게 알려주지 마세요. 코드는 <b>이메일+만료일+비밀키</b> 조합으로 만들어지므로, 비밀키를 바꾸면 기존 코드는 모두 무효가 됩니다.</div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+let lastCode = "", lastEmail = "", lastExpiry = "";
+
+function toast(msg){
+  const t = $("toast"); t.textContent = msg; t.style.display = "block";
+  clearTimeout(t._h); t._h = setTimeout(()=>t.style.display="none", 2800);
+}
+$("plan").addEventListener("change", ()=>{
+  const custom = $("plan").value === "custom";
+  $("dateLabel").style.display = custom ? "" : "none";
+  $("customDate").style.display = custom ? "" : "none";
+});
+
+function ymd(d){
+  const p = n => String(n).padStart(2,"0");
+  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`;
+}
+function pretty(y){ return `${y.slice(0,4)}.${y.slice(4,6)}.${y.slice(6,8)}`; }
+
+async function licSig(email, expiry, secret){
+  const data = new TextEncoder().encode(email.trim().toLowerCase() + "|" + expiry + "|" + secret);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(buf)].slice(0,4).map(b=>b.toString(16).padStart(2,"0")).join("").toUpperCase();
+}
+
+$("genBtn").addEventListener("click", async ()=>{
+  const email = $("email").value.trim();
+  const secret = $("secret").value.trim();
+  if(!email.includes("@")){ toast("구매자 이메일을 입력하세요."); return; }
+  if(!secret){ toast("비밀키를 입력하세요."); return; }
+
+  let expiry;
+  if($("plan").value === "custom"){
+    if(!$("customDate").value){ toast("만료일을 지정하세요."); return; }
+    expiry = $("customDate").value.replace(/-/g,"");
+  }else{
+    const months = parseInt($("plan").value, 10);
+    const d = new Date(); d.setMonth(d.getMonth() + months);
+    expiry = ymd(d);
+  }
+
+  const sig = await licSig(email, expiry, secret);
+  lastCode = `DC-${expiry}-${sig}`;
+  lastEmail = email; lastExpiry = expiry;
+  $("codeOut").textContent = lastCode;
+  $("metaOut").textContent = `${email} · ${pretty(expiry)}까지 유효`;
+  $("result").style.display = "block";
+});
+
+$("copyBtn").addEventListener("click", async ()=>{
+  try{ await navigator.clipboard.writeText(lastCode); }
+  catch(_){ const ta=document.createElement("textarea"); ta.value=lastCode; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
+  toast("코드가 복사되었습니다.");
+});
+
+$("mailBtn").addEventListener("click", ()=>{
+  const subject = "[SKILL COMPASS] 라이선스 코드 안내";
+  const body =
+`안녕하세요, 딥컴퍼스AI연구소입니다.
+SKILL COMPASS 구독이 확인되어 라이선스 코드를 보내드립니다.
+
+■ 라이선스 코드: ${lastCode}
+■ 유효 기간: ${pretty(lastExpiry)}까지
+
+[활성화 방법]
+1. https://shabley.github.io/deepcompass-ai-lab/skill-maker/ 접속
+2. [💳 구독/결제] 탭 → 하단 "라이선스 코드 활성화"
+3. 이메일(${lastEmail})과 위 코드를 입력 후 [활성화]
+
+이용해 주셔서 감사합니다.
+딥컴퍼스AI연구소 드림`;
+  location.href = `mailto:${lastEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+});
+</script>
+</body>
+</html>
