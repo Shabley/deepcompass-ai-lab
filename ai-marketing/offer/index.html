@@ -137,6 +137,14 @@
   footer b{color:#fff}
   .float{position:fixed;right:18px;bottom:18px;background:var(--yellow);border-radius:100px;padding:10px 18px;font-weight:800;font-size:14px;color:var(--ink);box-shadow:0 6px 18px rgba(20,33,61,.25);z-index:50}
   .refund{font-size:14px;color:var(--body);margin-top:14px;text-align:center}
+  .bank-box{margin-top:14px;text-align:center}
+  .bank-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:8px 14px}
+  .bank-name{font-weight:800;color:var(--indigo)}
+  .bank-num{font-size:26px;font-weight:900;color:var(--ink);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+  .bank-owner{font-size:14px;color:var(--muted)}
+  .copy-btn{margin-top:12px;background:var(--yellow);color:var(--ink);border:0;border-radius:8px;padding:10px 18px;font-weight:800;font-size:15px;cursor:pointer;font-family:var(--sans)}
+  .copy-btn:hover{filter:brightness(1.05)}
+  .bank-note{font-size:14px;color:var(--body);margin-top:12px}
 </style>
 </head>
 <body>
@@ -284,10 +292,11 @@
 
     <div class="or">또는</div>
 
-    <div class="card bank">
-      <span class="pill" style="background:var(--green)">계좌이체로 입금하기</span>
-      <div class="b">신청서 제출 후 안내되는 계좌로 590,000원</div>
-      <p>신청하신 성함과 같은 이름으로 입금해 주세요.<br>현금영수증을 발급해 드립니다.</p>
+    <button type="button" class="btn ghost" id="bankBtn" aria-expanded="false" aria-controls="bankBox"><span>2단계 · 계좌이체로 입금하기 ▾</span></button>
+    <div class="card bank bank-box" id="bankBox" hidden>
+      <div class="bank-row"><span class="bank-name">농협</span><span class="bank-num" id="bankNum">302-0113-5149-81</span><span class="bank-owner">예금주 고연심</span></div>
+      <button type="button" class="copy-btn" id="copyBtn">계좌번호 복사</button>
+      <p class="bank-note">신청서를 먼저 제출한 뒤, <b>신청하신 성함</b>으로 590,000원을 입금해 주세요.<br>현금영수증을 발급해 드리며, 입금 확인 후 1영업일 안에 수강 확정 안내를 보내 드립니다.</p>
     </div>
 
     <p class="refund"><b>환불 규정</b> · 개강(10월 28일) 전까지 요청하시면 100% 환불해 드립니다. 개강 이후에는 환불이 되지 않으며, 참석하지 못한 회차는 녹화본으로 수강하실 수 있습니다.</p>
@@ -331,6 +340,24 @@
   const APPLY_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSecP3CCS4f2B-P9cw07TOr302WrPMsuW-UKUC_B8ToWnIHYbg/viewform';
   const applyBtn = document.getElementById('applyBtn');
   applyBtn.href = APPLY_URL;
+
+  // 계좌이체 펼치기 + 계좌번호 복사
+  const bankBtn = document.getElementById('bankBtn');
+  const bankBox = document.getElementById('bankBox');
+  const copyBtn = document.getElementById('copyBtn');
+  bankBtn.addEventListener('click', () => {
+    const open = bankBox.hidden;
+    bankBox.hidden = !open;
+    bankBtn.setAttribute('aria-expanded', String(open));
+    bankBtn.querySelector('span').textContent = open ? '2단계 · 계좌이체로 입금하기 ▴' : '2단계 · 계좌이체로 입금하기 ▾';
+  });
+  copyBtn.addEventListener('click', async () => {
+    const num = document.getElementById('bankNum').textContent.replace(/-/g, '');
+    try { await navigator.clipboard.writeText(num); }
+    catch (e) { const ta = document.createElement('textarea'); ta.value = num; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+    copyBtn.textContent = '복사됨 ✓ (농협 ' + num + ')';
+    setTimeout(() => { copyBtn.textContent = '계좌번호 복사'; }, 2500);
+  });
 </script>
 </body>
 </html>
